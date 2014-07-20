@@ -1,7 +1,10 @@
 title: 入门markdown以及它的工具
 date: 2014-07-19 16:19:42
-tags: markdown sublime
-categories: Hexo
+tags:
+- markdown
+- sublime
+categories:
+- Hexo
 ---
 这几天耍了一个hexo挂在github上的博客。
 hexo使用node.js，感觉很高大上啊，里面的文件看不懂啊不知道怎么改啊。
