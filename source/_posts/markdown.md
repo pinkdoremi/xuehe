@@ -19,6 +19,7 @@ hexo使用node.js，感觉很高大上啊，里面的文件看不懂啊不知道
 实际内容还是很简单的，看一遍就基本上会用了。
 
 #markdown工具
+<!-- more --> 
 ##在线编辑器
 但是我觉得直接编辑这个文件实在是有点太抽象了，我找到了一个网页版的markdown的编辑器：
 [mahua在线markdown编辑器](http://mahua.jser.me/)
