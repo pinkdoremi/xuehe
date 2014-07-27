@@ -6,6 +6,7 @@
     "hexo-renderer-ejs": "*",
     "hexo-renderer-jade": "^0.1.0",
     "hexo-renderer-marked": "*",
-    "hexo-renderer-stylus": "*"
+    "hexo-renderer-stylus": "*",
+    "hexo-tag-bootstrap": "0.0.6"
   }
 }

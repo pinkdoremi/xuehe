@@ -4,7 +4,7 @@
 
 # Site
 title: Persimmon Kneader
-subtitle: 捏软柿子狂魔的学习日志
+subtitle: Persimmon Kneader
 description: 技术博客
 author: Xue He
 email: hexue_8000@qq.com
@@ -82,7 +82,7 @@ duoshuo_shortname: hexue
 # Extensions
 ## Plugins: https://github.com/tommy351/hexo/wiki/Plugins
 ## Themes: https://github.com/heroicyang/hexo-theme-modernist
-theme: strict
+theme: freemind
 exclude_generator:
 
 # Deployment
