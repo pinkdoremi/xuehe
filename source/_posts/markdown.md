@@ -3,6 +3,7 @@ date: 2014-07-19 16:19:42
 tags:
 - markdown
 - sublime
+- hexo
 categories:
 - Hexo
 ---

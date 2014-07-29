@@ -5,7 +5,7 @@ tags:
 - 触摸
 - 委托
 - 翻译
-catgories:
+categories:
 - ExtJs
 ---
 这两天因为给SenchTouch项目做手势功能，找了很多资料。sencha touch本身的文档没有介绍关于手势功能的，我这几天会总结一下sencha 的touch event并且整理一篇文章出来。
