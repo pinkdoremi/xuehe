@@ -5,6 +5,7 @@ tags:
 - 触摸
 - 委托
 - 翻译
+- sencha-touch
 categories:
 - ExtJs
 ---
