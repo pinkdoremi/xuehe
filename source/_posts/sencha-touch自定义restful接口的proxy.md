@@ -4,11 +4,10 @@ tags:
 - restful
 - proxy
 - store
-- sencha-touch
+- sencha touch
 categories:
-- sencha-touch
+- sencha touch
 ---
-#sencha touch 自定义restful的proxy
 
 使用sencha-touch的store时，有时数据来自rest的接口，因为不同服务器rest的不同，我们需要自己来定制属于自己的proxy。
 <!--more-->

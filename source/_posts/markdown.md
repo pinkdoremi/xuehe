@@ -5,7 +5,7 @@ tags:
 - sublime
 - hexo
 categories:
-- Hexo
+- markdown
 ---
 这几天耍了一个hexo挂在github上的博客。
 hexo使用node.js，感觉很高大上啊，里面的文件看不懂啊不知道怎么改啊。

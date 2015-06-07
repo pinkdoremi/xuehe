@@ -4,7 +4,7 @@
 
 # Site
 title: Persimmon Kneader
-subtitle: Persimmon Kneader
+subtitle: Front-End Developer
 description: 技术博客
 author: Xue He
 email: hexue_8000@qq.com
@@ -12,7 +12,7 @@ language: zh-CN
 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
-url: http://hexue.tk
+url: http://yukihe.com
 root: /
 permalink: :year/:month/:day/:title/
 tag_dir: tags
@@ -82,7 +82,7 @@ duoshuo_shortname: hexue
 # Extensions
 ## Plugins: https://github.com/tommy351/hexo/wiki/Plugins
 ## Themes: https://github.com/heroicyang/hexo-theme-modernist
-theme: freemind
+theme: light
 exclude_generator:
 
 # Deployment

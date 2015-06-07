@@ -2,7 +2,6 @@ title: 详解css优先级
 date: 2014-09-02 22:20:52
 tags:
 - css
-- 优先级
 categories:
 - css
 ---

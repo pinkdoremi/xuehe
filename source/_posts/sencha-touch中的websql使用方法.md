@@ -1,12 +1,10 @@
 title: 'sencha touch中的websql使用方法'
 date: 2014-08-17 01:38:26
 tags:
-- html5
 - websql
-- 本地存储
 - sencha-touch
 categories:
-- sencha touch 基础知识
+- sencha touch
 
 ---
 html5中有个websql的技术可以在浏览器中使用数据库，这个技术现在在sencha touch中可以被使用，而且已经封装好了，存在一个proxy了。但是这个方法在官方文档中介绍极少，使用起来难免一头雾水，我也是经过很久的研究才渐渐磕磕碰碰懂得了很多这其中的因果缘由，拿出来和大家分享啊！

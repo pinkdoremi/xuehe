@@ -1,10 +1,9 @@
 title: 'Sencha Touch基础知识一：获取一个组件方法整理'
 date: 2014-07-28 22:33:20
 tags:
-- sencha-touch
-- dom
+- sencha touch
 categories:
-- sencha touch 基础知识
+- sencha touch
 ---
 
 获取一个组件有很多种方法。本文将分成四部分讲解：
