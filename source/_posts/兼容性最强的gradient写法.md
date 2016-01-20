@@ -21,10 +21,10 @@ categories:
 
 <!-- more -->
 
-###css 新版的渐变：
+### css 新版的渐变：
 到处都有使用说明: [详见MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/gradient)
 
-###css 老版本的渐变：
+### css 老版本的渐变：
 在真正去使用渐变之前，我一直以为渐变只有linear-gradient/radial-gradient这说，没想到，在我也忘了是什么机子上（好像是android 2.3），这个属性竟然没有效果！！！
 于是，在我历经千山万水找了很多我也忘了在哪里找到的资料的情况下！我终于找到了解决办法！*（下次我一定记得到底在哪里找到的）*
 
@@ -36,7 +36,7 @@ categories:
 
         -webkit-gradient(radial, center bottom, 0, center bottom, 220, from(rgba(255, 255, 255, 0.69)), to(rgba(255, 255, 255, 0)))；
 
-###注意点
+### 注意点
 径向渐变中要注意的问题：
 1. 内圆->外圆的写法（虽然外圆到内圆pc上效果一样，但是会出问题）
 **例子：**

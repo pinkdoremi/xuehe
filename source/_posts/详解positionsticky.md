@@ -15,9 +15,9 @@ categories:
 ![一张图](/img/sticky1.PNG "一开始是这样的")
 ![另一张图](/img/sticky2.PNG "滑下来后是这样的")
 但是因为可怕的iOS中和Android中的滚动事件，导致了会出现事件的阻止，导致:卡！卡！卡！
-#但是iOS和Android中为什么事件会被阻止呢
+# 但是iOS和Android中为什么事件会被阻止呢
 这就要说到他们一直引以为傲的惯性滚动了。这个是PC上浏览器一般没有的特性。
-##首先来看看scroll事件和touchmove事件在移动端的触发机制
+## 首先来看看scroll事件和touchmove事件在移动端的触发机制
 在iOS上，滑动过程中的两个事件(scroll&touchmove)是这样触发的：
 touchstart -> touchmove touchmove touchmove ....... touchmove -> touchend ->开始惯性滚动 -> 滚 滚 滚 ... -> 惯性滚动结束 -> scroll
 也就是说，整个滑动过程中，scroll只触发了一次，实在滑动彻底结束的时候触发的。
@@ -25,7 +25,7 @@ touchstart -> touchmove touchmove touchmove ....... touchmove -> touchend ->开�
 touchstart -> touchmove,scroll touchmove,scroll touchmove,scroll ....... touchmove,scroll -> touchend ->开始惯性滚动 -> 滚,scroll 滚,scroll 滚,scroll ... -> 惯性滚动结束 -> scroll
 第二种情况scroll是在滚动的过程中一直被触发的。
 所以，从这个方面来看，问题是：*很难找到在滑动过程中连贯的事件*。
-##是什么阻止了动画
+## 是什么阻止了动画
 但是问题还不仅仅在这里，有这么一个场景：页面有个广告轮播图，一般情况下播的好好的，但是当我手指触摸并且滑了一下让页面有所滚动的时候并且恰巧广告正在切换过程中，广告会立即停止切换，停在半空中，也就是transition停住了。
 ![停住了的瞬间抓拍](/img/sticky3.PNG "停住了的瞬间抓拍")
 在松手后，图片又继续*滑动*回应该滑动到的位置，显然，这个继续滑动，意思是这个事件只是被暂停，再被继续，而不是终止了。
@@ -40,17 +40,17 @@ touchstart -> touchmove,scroll touchmove,scroll touchmove,scroll ....... touchmo
 在米2s这类机子中，并不在滑动中暂停任何事件和渲染。
 为什么要在滑动中暂停这些事件和渲染呢，我个人认为应该是为了更流畅地响应用户的滑动。
 
-##滑动置顶的导航栏
+## 滑动置顶的导航栏
 在这种情况下，滑动置顶的导航栏就不怎么好实现了。
 利用传统的方法，是监听页面scroll的位置，到一定程度的时候就`position:fixed;top:0`。
 为了兼容ios,必须同时监听touchmove事件。但是问题来了，滑动是这么一个过程：
 touchstart -> touchmove,scroll -> touchmove,scroll -> touchend,scroll -> scroll slower -> scroll end
 也就是说，在手指离开屏幕到惯性滚动停止期间，是监听不到任何事件的，这段时间中如果需要改变成`position:fixed`或者`position:static`页面就不会变化，直到滑动停止才会响应。
 在魅族中，因为scroll事件不连贯，依然会看起来不是在准确的某个位置变化posotion的属性，会卡卡卡的。
-##新的解决方案
+## 新的解决方案
 这个妙招目前只有ios兼容，在ios6的系统上有bug，在ios7以上表现优秀。
 此外，并不确定这个属性是否会被保留。但是目前来说还是很好用的。
-###特性
+### 特性
 它集齐了`position:fixed`和`position:static`两者的功能。它自己一个人，就可以创造滑动置顶的导航栏，不需要任何js控制。
 对于滑动置顶导航栏，只需要:
 
@@ -58,12 +58,12 @@ touchstart -> touchmove,scroll -> touchmove,scroll -> touchend,scroll -> scroll 
     top:0px;
 
 就能搞定。
-##position:sticky
+## position:sticky
 sticky的意思是粘性的。
 具有sticky属性的元素，并且受top值影响的元素，该元素距离屏幕顶部的距离最少为top值的距离。但是，该元素必须在父元素这个框内，也就说说，当父元素被彻底上滑滑出屏幕的时候，该元素会跟着父元素被滑出屏幕。
 具有sticky属性的元素，并且受bottom值影响的元素，该元素距离屏幕底部的距离最少为bottom值的距离。但是，该元素必须在父元素这个框内，也就说说，当父元素被彻底下滑滑出屏幕的时候，该元素会跟着父元素被滑出屏幕。
 left,right同样。
-###实现一个导航栏顶跑另一个导航栏
+### 实现一个导航栏顶跑另一个导航栏
 利用stiky元素和父元素的关系就可以实现顶跑的功能。
 如下:
 
@@ -75,11 +75,11 @@ left,right同样。
             <div>stikcy</div>
             <p>......normal</p>
         </div>
-###使用sticky务必注意父元素
+### 使用sticky务必注意父元素
 所以说，父元素是控制sticky的关键元素。当你的sticky设置了米有用，或者不会顶跑，请仔细查看你的父元素，是否是sticky有效的区域。
 demo我会之后奉上。
-###兼容性
+### 兼容性
 此外，目前是*需要前缀*的。目前在ios上支持，并且ios7+,ios6有问题不能使用。
 安卓的解决方案还是用脚本控制，但是不完美，建议直接取消安卓。
-##模拟滚动
+## 模拟滚动
 这个是解决触摸卡顿问题的一个办法，但是目前，在许多安卓机器上还是相当卡顿的。但是很多公司都使用了这个方法，我觉得各有好处和缺陷，不好评价这个技术的好坏。

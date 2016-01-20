@@ -9,7 +9,7 @@ excerpt_link: Read More
 fancybox: true
 
 # Sidebar
-sidebar: left
+sidebar: right
 widgets:
 - category
 - tag

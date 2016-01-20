@@ -4,12 +4,12 @@ tags:
 - 调试工具
 - browsersync
 categories:
-- 调试工具
+- 工具
 ---
-#用来干嘛的
+# 用来干嘛的
 [BrowserSync](http://www.browsersync.io/)可以监听你的页面文件的变化。每当页面文件变化时，所有访问该站点的设备都会同步刷新，并且显示最新的代码。
 此外它还有个超级厉害的功能就是在任意一个设备上的操作，会同步到别的设备上，你下拉，别的页面也会下拉，你点按钮，别的页面也会点按钮。ui验收的时候，摆上一排机器，随便拉拉，页面都在晃，超级拉风的，而且对效率的提升非常高。
-#5分钟快速上手
+# 5分钟快速上手
 1. 安装nodeJs
 2. 安装BrowserSync
     ```        
@@ -38,7 +38,7 @@ categories:
     下面的两个网站是可以提供UI控制。UI控制界面如下，可以自己多点点看。很有意思的。
 ![ui控制界面](/img/browsersync.bmp)
 
-#全部功能
+# 全部功能
 + 动作同步
 同步click scroll form input&submit
 + 文件同步
@@ -53,7 +53,7 @@ categories:
 + 支持Grunt&Gulp
 + 提供网速模拟。可以限速。
 
-#BrowserSync命令行帮助
+# BrowserSync命令行帮助
 自行体会：
 
         $ browser-sync -h
@@ -113,5 +113,5 @@ categories:
         
               $ browser-sync start --proxy="localhost:8080" --files="*.html,css/*.css"
 
-#总结
+# 总结
 真的好好用的呀！

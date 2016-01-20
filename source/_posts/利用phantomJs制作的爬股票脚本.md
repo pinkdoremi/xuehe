@@ -13,14 +13,14 @@ categories:
 
 大概就是这样。一边写一边来吧。
 
-#phantomJs
+# phantomJs
 目前我只知道phantomJs是干嘛用的：就是提供一个模拟浏览器的环境。
 然后去看看怎么用这个玩意。
 <!--more-->
-##安装
+## 安装
 官方的网址->[http://phantomjs.org/build.html](http://phantomjs.org/build.html)
 然后根据教程来进行安装，本来安装步骤是不打算写的，但是没想到今天网不太好，git下载了好久都没有下载好。
-###安装步骤：
+### 安装步骤：
     git clone git://github.com/ariya/phantomjs.git
     cd phantomjs
     git checkout 2.0
@@ -29,11 +29,11 @@ categories:
 于是看到了这里：[download](http://phantomjs.org/download.html)
 直接下载了zip包.=……=
 最终获得是是`bin/phantomjs.exe`这个文件。
-###安装方法2
+### 安装方法2
 还有个办法是使用npm或者brew安装，就不细说了，大家应该都懂。
-###安装方法3
+### 安装方法3
 淘宝镜像有[下载地址](http://npm.taobao.org/mirrors/phantomjs)
-#编写脚本
+# 编写脚本
 ok，接下来进行脚本的编写啦。
 我建立一个名为`run.js`的脚本。
 恰巧看到start中有个类似的demo是这样的。
