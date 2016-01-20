@@ -72,5 +72,6 @@ theme: light
 # Deployment
 ## Docs: http://hexo.io/docs/deployment.html
 deploy:
-  type: github
-  repository: https://github.com/pinkdoremi/xuehe.git
+- type: github
+  repo: https://github.com/pinkdoremi/xuehe.git
+  message: Site updated: {{ now("YYYY-MM-DD HH:mm:ss") }})
