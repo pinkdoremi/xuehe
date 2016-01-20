@@ -1,0 +1,647 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Persimmon Kneader</title>
+  <meta name="author" content="Xue He">
+  
+  <meta name="description" content="技术博客">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+  <meta property="og:site_name" content="Persimmon Kneader"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  <link href="/favicon.png" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="Persimmon Kneader" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  
+<script>
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+	ga('create', 'UA-52998995-1', 'auto');
+	ga('send', 'pageview');
+
+</script>
+
+
+  <script>
+  var _hmt = _hmt || [];
+  (function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?290e001b4a2e8fd868d1eea78cbf6f9f";
+    var s = document.getElementsByTagName("script")[0]; 
+    s.parentNode.insertBefore(hm, s);
+  })();
+  </script>
+</head>
+
+
+<body>
+  <header id="header" class="inner"><div class="alignleft">
+  <h1><a href="/">Persimmon Kneader</a></h1>
+  <h2><a href="/">Front-End Developer</a></h2>
+</div>
+<nav id="main-nav" class="alignright">
+  <ul>
+    
+      <li><a href="//">Home</a></li>
+    
+      <li><a href="//archives">Archives</a></li>
+    
+      <li><a href="//aboutme">About Me</a></li>
+    
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+<div class="clearfix"></div>
+</header>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper">
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2015-11-18T16:30:33.000Z"><a href="/2015/11/19/redux心得/">2015-11-19</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/11/19/redux心得/">redux心得</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <h2 id="redux_u4ECB_u7ECD"><a href="#redux_u4ECB_u7ECD" class="headerlink" title="redux介绍"></a>redux介绍</h2><p>redux是flux的一种实现方案,相较于flux,更加清晰易用,它可以实现日志打印,热加载,同构应用,录制回放..</p>
+<ul>
+<li><a href="https://github.com/happypoulp/redux-tutorial">https://github.com/happypoulp/redux-tutorial</a> 非常清晰的教程,但是说的不深入,速成上手用</li>
+<li><a href="http://camsong.github.io/redux-in-chinese/">http://camsong.github.io/redux-in-chinese/</a> 官方文档的中文版</li>
+<li><a href="http://rackt.github.io/redux/">http://rackt.github.io/redux/</a> 官方文档的英文原版</li>
+<li><a href="https://github.com/xgrommx/awesome-redux">https://github.com/xgrommx/awesome-redux</a> 各种redux相关网站的收录</li>
+</ul>
+<p>本文接下来说提到的一些词汇(state,action,reducer,action creator,dispatch,store,middleware)可以通过下面找到解释:</p>
+<ul>
+<li>中文:<a href="http://camsong.github.io/redux-in-chinese/docs/Glossary.html">http://camsong.github.io/redux-in-chinese/docs/Glossary.html</a></li>
+<li>英文:<a href="http://rackt.org/redux/docs/Glossary.html">http://rackt.org/redux/docs/Glossary.html</a></li>
+</ul>
+<h3 id="flux"><a href="#flux" class="headerlink" title="flux"></a><a href="https://facebook.github.io/flux/">flux</a></h3><p>flux也是一种强调单向数据流的架构思想,也可以说是一种模式.它的单向数据流如下图所意:<br><img src="https://facebook.github.io/flux/img/flux-simple-f8-diagram-with-client-action-1300w.png" alt=""><br>在他之后的有redux,reflux…这些都是借鉴了flux的思想,细看他们的思想和架构大体上都是相似的.</p>
+<h4 id="u4E0Eredux_u7684_u533A_u522B_u4E00"><a href="#u4E0Eredux_u7684_u533A_u522B_u4E00" class="headerlink" title="与redux的区别一"></a>与redux的区别一</h4><p>flux的dispatch是在action中直接调用的</p>
+<figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> TodoActions = &#123;</span><br><span class="line">  create: <span class="function"><span class="keyword">function</span><span class="params">(text)</span> </span>&#123;</span><br><span class="line">    AppDispatcher.dispatch(&#123;</span><br><span class="line">      actionType: <span class="string">'TODO_CREATE'</span>,</span><br><span class="line">      text: text</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;,</span><br><span class="line"> &#125;;</span><br><span class="line">TodoActions.create(<span class="string">'test'</span>);</span><br></pre></td></tr></table></figure>
+<p>而redux的action,实际上是action creator,把action creator和store的dispatch绑定起来后，直接调用action creator的产物会被直接dispatch出来。</p>
+      
+    </div>
+    <footer>
+      
+        
+          <div class="alignleft">
+            <a href="/2015/11/19/redux心得/#more" class="more-link">Read More</a>
+          </div>
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2015-10-10T20:13:45.000Z"><a href="/2015/10/11/仔细翻一翻Alfred/">2015-10-11</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/10/11/仔细翻一翻Alfred/">仔细翻一翻alfred</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>记得自己很久以前刚用mac的时候下了个alfred但是一直没好好学着怎么用，放着很久压箱底，整理软件的时候把它删掉了，最近在公司看到同事们的alfred都玩得好溜，决定重新补一下alfred。</p>
+<h3 id="u5173_u4E8E_u6536_u8D39"><a href="#u5173_u4E8E_u6536_u8D39" class="headerlink" title="关于收费"></a>关于收费</h3><p>它目前v2版本的收费是这样子的：</p>
+<ul>
+<li>单台机子 17欧</li>
+<li>5台机子 family版 27欧</li>
+<li>终生可升级版&amp;单台机子(意思是出现v3版本的时候不用再买了) 32欧</li>
+</ul>
+<p>我趁着现在欧元汇率很低的情况下(写的时候1:7)赶紧买了个27欧版本。想来自己和男票的电脑数量凑凑有4台，家庭版比较合算。</p>
+<h3 id="u540C_u6B65_u8BBE_u7F6E"><a href="#u540C_u6B65_u8BBE_u7F6E" class="headerlink" title="同步设置"></a>同步设置</h3><p>官方同步教程：<a href="https://www.alfredapp.com/help/advanced/sync/">link</a></p>
+<p>如果自己有多台设备的话，同步功能必不可少，省的一台一台电脑去设置啦。</p>
+      
+    </div>
+    <footer>
+      
+        
+          <div class="alignleft">
+            <a href="/2015/10/11/仔细翻一翻Alfred/#more" class="more-link">Read More</a>
+          </div>
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2015-08-09T15:43:01.000Z"><a href="/2015/08/09/细说PhantomJS/">2015-08-09</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/08/09/细说PhantomJS/">细说PhantomJS</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <h2 id="PhantomJs_u662F_u4EC0_u4E48_uFF1F"><a href="#PhantomJs_u662F_u4EC0_u4E48_uFF1F" class="headerlink" title="PhantomJs是什么？"></a><a href="http://phantomjs.org/">PhantomJs</a>是什么？</h2><p>Phantom JS是一个服务器端的 JavaScript API 的 WebKit。支持各种Web标准： DOM 处理, CSS 选择器, JSON, Canvas, 和 SVG。</p>
+<h2 id="PhantomJs_u5E72_u4EC0_u4E48_uFF1F"><a href="#PhantomJs_u5E72_u4EC0_u4E48_uFF1F" class="headerlink" title="PhantomJs干什么？"></a><a href="http://phantomjs.org/">PhantomJs</a>干什么？</h2><p>它可以用来模拟浏览器环境，实现不开浏览器隔空跑基于页面环境上的脚本。</p>
+<h3 id="u4F7F_u7528_u65B9_u5F0F"><a href="#u4F7F_u7528_u65B9_u5F0F" class="headerlink" title="使用方式"></a>使用方式</h3><p>用phantomJs 写一个脚本，然后在命令行运行</p>
+<h3 id="u5177_u4F53_u7684_u529F_u80FD_u70B9_uFF1A"><a href="#u5177_u4F53_u7684_u529F_u80FD_u70B9_uFF1A" class="headerlink" title="具体的功能点："></a>具体的功能点：</h3><h4 id="u622A_u5C4F"><a href="#u622A_u5C4F" class="headerlink" title="截屏"></a><a href="http://phantomjs.org/screen-capture.html">截屏</a></h4><p>因为phantomJs使用了webkit的内核，自带布局和渲染，所以是可以截屏的。如下：截图github。</p>
+<pre><code>var page = require(&apos;webpage&apos;).create();
+page.open(&apos;http://github.com/&apos;, function() {
+    page.render(&apos;github.png&apos;);
+    phantom.exit();
+});
+</code></pre><h4 id="u7F51_u7EDC_u76D1_u63A7"><a href="#u7F51_u7EDC_u76D1_u63A7" class="headerlink" title="网络监控"></a><a href="http://phantomjs.org/network-monitoring.html">网络监控</a></h4>
+      
+    </div>
+    <footer>
+      
+        
+          <div class="alignleft">
+            <a href="/2015/08/09/细说PhantomJS/#more" class="more-link">Read More</a>
+          </div>
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2015-07-02T14:41:48.000Z"><a href="/2015/07/02/利用phantomJs制作的爬股票脚本/">2015-07-02</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/07/02/利用phantomJs制作的爬股票脚本/">利用phantomJs制作的爬股票脚本</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>思路：</p>
+<ol>
+<li>利用phantomJs爬取同花顺网站。</li>
+<li>利用选择器找到网站上的价格数据。</li>
+<li>利用每隔一秒重新获取价格的方式拿到实时的价格。</li>
+<li>在命令行显示一个界面显示价格。</li>
+</ol>
+<p>大概就是这样。一边写一边来吧。</p>
+<h1 id="phantomJs"><a href="#phantomJs" class="headerlink" title="phantomJs"></a>phantomJs</h1><p>目前我只知道phantomJs是干嘛用的：就是提供一个模拟浏览器的环境。<br>然后去看看怎么用这个玩意。<br>
+      
+    </div>
+    <footer>
+      
+        
+          <div class="alignleft">
+            <a href="/2015/07/02/利用phantomJs制作的爬股票脚本/#more" class="more-link">Read More</a>
+          </div>
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2015-06-29T13:21:52.000Z"><a href="/2015/06/29/初探webp/">2015-06-29</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/06/29/初探webp/">webp初探</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>webp格式是目前各大厂商大热图片压缩格式。各种优势已经是路人皆知了。<br>最近测试使用了一下webp格式。</p>
+<h1 id="webp_u4ECB_u7ECD"><a href="#webp_u4ECB_u7ECD" class="headerlink" title="webp介绍"></a>webp介绍</h1><p>这个其实不用多说了，就是一种图片格式。目前在移动端上只有安卓支持它，ios并不支持。</p>
+<h2 id="u4F7F_u7528_u65B9_u6CD5"><a href="#u4F7F_u7528_u65B9_u6CD5" class="headerlink" title="使用方法"></a>使用方法</h2><p>在chrome上是兼容的。Safari和firefox不兼容。<br>具体的兼容性请查看<a href="http://caniuse.com/#feat=webp">caniuse</a><br>这里只介绍了在移动端上的情况。<br>
+      
+    </div>
+    <footer>
+      
+        
+          <div class="alignleft">
+            <a href="/2015/06/29/初探webp/#more" class="more-link">Read More</a>
+          </div>
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2015-06-26T12:24:05.000Z"><a href="/2015/06/26/响应式调试利器BrowserSync/">2015-06-26</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/06/26/响应式调试利器BrowserSync/">响应式调试利器BrowserSync</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <h1 id="u7528_u6765_u5E72_u561B_u7684"><a href="#u7528_u6765_u5E72_u561B_u7684" class="headerlink" title="用来干嘛的"></a>用来干嘛的</h1><p><a href="http://www.browsersync.io/">BrowserSync</a>可以监听你的页面文件的变化。每当页面文件变化时，所有访问该站点的设备都会同步刷新，并且显示最新的代码。<br>此外它还有个超级厉害的功能就是在任意一个设备上的操作，会同步到别的设备上，你下拉，别的页面也会下拉，你点按钮，别的页面也会点按钮。ui验收的时候，摆上一排机器，随便拉拉，页面都在晃，超级拉风的，而且对效率的提升非常高。</p>
+<h1 id="5_u5206_u949F_u5FEB_u901F_u4E0A_u624B"><a href="#5_u5206_u949F_u5FEB_u901F_u4E0A_u624B" class="headerlink" title="5分钟快速上手"></a>5分钟快速上手</h1><ol>
+<li>安装nodeJs</li>
+<li><p>安装BrowserSync</p>
+ <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm <span class="operator"><span class="keyword">install</span> -<span class="keyword">g</span> browser-<span class="keyword">sync</span></span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>启动BrowserSync</p>
+ <figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">browser-<span class="keyword">sync</span> start --server --<span class="keyword">files</span> <span class="string">"css/*.css"</span></span><br></pre></td></tr></table></figure>
+<pre><code>每当`css/*.css`中的文件作出改动时，所有正在打开刚网站的设备都会获得最新的资源刷新页面。
+</code></pre>
+      
+    </div>
+    <footer>
+      
+        
+          <div class="alignleft">
+            <a href="/2015/06/26/响应式调试利器BrowserSync/#more" class="more-link">Read More</a>
+          </div>
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2015-06-16T12:21:08.000Z"><a href="/2015/06/16/自动化文档的注释和文档生成工具/">2015-06-16</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/06/16/自动化文档的注释和文档生成工具/">自动化文档的注释和文档生成工具</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <h1 id="yuidoc"><a href="#yuidoc" class="headerlink" title="yuidoc"></a>yuidoc</h1><p>yuidoc是一个自动化文档生成工具。只要用户按照规范在代码中写注释，使用yuidoc可以把代码中的注释解析成一个文档，生成一个文档网站。</p>
+<h2 id="u8BED_u6CD5"><a href="#u8BED_u6CD5" class="headerlink" title="语法"></a>语法</h2><p>yuidoc只解析注释块，不会解析JavaScript代码。<br>yuidoc支持HTML <a href="http://daringfireball.net/projects/markdown/syntax">Markdown</a> <a href="http://yui.github.io/selleck/">Selleck</a></p>
+<h3 id="u6CE8_u91CA_u5757"><a href="#u6CE8_u91CA_u5757" class="headerlink" title="注释块"></a>注释块</h3><p>yuidoc能够检测到的注释块是这样的：<br>以<code>/**</code>开头的注释块，结尾可以是<code>*/</code>或者<code>**/</code>都可以。<br>
+      
+    </div>
+    <footer>
+      
+        
+          <div class="alignleft">
+            <a href="/2015/06/16/自动化文档的注释和文档生成工具/#more" class="more-link">Read More</a>
+          </div>
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2015-05-14T13:12:16.000Z"><a href="/2015/05/14/详解positionsticky/">2015-05-14</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/05/14/详解positionsticky/">详解position:sticky</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>做过移动端的人应该都知道，在iOS 和 部分安卓机上，手指触摸有时会阻塞javascript，导致有时摁住屏幕，页面就会一动不动。比如说摁住屏幕，倒计时停止。<br>如果有这么一个需求：有一个导航栏，是在页面中间位置的，当页面往下滑动超过导航栏的时候，导航栏滑到顶部的时候需要置顶，在页面重新划回去的时候，导航栏又回到自己的位置上，整个过程导航栏的位置的变化应该是连贯的。<br>
+      
+    </div>
+    <footer>
+      
+        
+          <div class="alignleft">
+            <a href="/2015/05/14/详解positionsticky/#more" class="more-link">Read More</a>
+          </div>
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2015-04-25T12:31:45.000Z"><a href="/2015/04/25/clip-path/">2015-04-25</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/04/25/clip-path/">clip-path</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>趁着这两天比较闲研究了一下这个月风靡一时的属性clip-path。<br>起先关注到这个属性是看到了一个非常酷的<a href="http://species-in-pieces.com/#">网站</a><br>后来在微博上先后看到了很多人对它的解析，使用的是css3的clip-path属性。<br>
+      
+    </div>
+    <footer>
+      
+        
+          <div class="alignleft">
+            <a href="/2015/04/25/clip-path/#more" class="more-link">Read More</a>
+          </div>
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2015-03-30T14:52:22.000Z"><a href="/2015/03/30/利用层模型和硬件加速来优化页面渲染/">2015-03-30</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/03/30/利用层模型和硬件加速来优化页面渲染/">利用层模型和硬件加速来优化页面渲染</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>偶然间阅读到一篇文章，是关于<a href="http://web.jobbole.com/82195/">页面滚动性能</a>的。读完之后，特别是看完那个demo的时候顿时觉得好像很厉害的样子，但是又不太懂，所以去了解了许多webkit硬件加速和页面渲染这方面的知识，觉得应该整理分享出来。<br>
+      
+    </div>
+    <footer>
+      
+        
+          <div class="alignleft">
+            <a href="/2015/03/30/利用层模型和硬件加速来优化页面渲染/#more" class="more-link">Read More</a>
+          </div>
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+
+<nav id="pagination">
+  
+  
+    <a href="/page/2/" class="alignright next">下一页</a>
+  
+  <div class="clearfix"></div>
+</nav></div></div>
+    <aside id="sidebar" class="alignright">
+  <div class="search">
+  <form action="//google.com/search" method="get" accept-charset="utf-8">
+    <input type="search" name="q" results="0" placeholder="搜索">
+    <input type="hidden" name="q" value="site:yukihe.com">
+  </form>
+</div>
+
+  
+<div class="widget tag">
+  <h3 class="title">分类</h3>
+  <ul class="entry">
+  
+    <li><a href="/categories/ExtJs/">ExtJs</a><small>1</small></li>
+  
+    <li><a href="/categories/css/">css</a><small>5</small></li>
+  
+    <li><a href="/categories/markdown/">markdown</a><small>1</small></li>
+  
+    <li><a href="/categories/redux/">redux</a><small>1</small></li>
+  
+    <li><a href="/categories/sencha-touch/">sencha touch</a><small>3</small></li>
+  
+    <li><a href="/categories/图片压缩/">图片压缩</a><small>1</small></li>
+  
+    <li><a href="/categories/工具/">工具</a><small>3</small></li>
+  
+    <li><a href="/categories/性能优化/">性能优化</a><small>1</small></li>
+  
+    <li><a href="/categories/爬虫/">爬虫</a><small>1</small></li>
+  
+    <li><a href="/categories/自动化文档/">自动化文档</a><small>1</small></li>
+  
+  </ul>
+</div>
+
+
+  
+<div class="widget tag">
+  <h3 class="title">标签</h3>
+  <ul class="entry">
+  
+    <li><a href="/tags/alfred/">alfred</a><small>1</small></li>
+  
+    <li><a href="/tags/browsersync/">browsersync</a><small>1</small></li>
+  
+    <li><a href="/tags/css/">css</a><small>2</small></li>
+  
+    <li><a href="/tags/css3/">css3</a><small>4</small></li>
+  
+    <li><a href="/tags/gradient/">gradient</a><small>1</small></li>
+  
+    <li><a href="/tags/hexo/">hexo</a><small>1</small></li>
+  
+    <li><a href="/tags/markdown/">markdown</a><small>1</small></li>
+  
+    <li><a href="/tags/phantomJS/">phantomJS</a><small>1</small></li>
+  
+    <li><a href="/tags/phantomJs/">phantomJs</a><small>1</small></li>
+  
+    <li><a href="/tags/proxy/">proxy</a><small>1</small></li>
+  
+    <li><a href="/tags/react/">react</a><small>1</small></li>
+  
+    <li><a href="/tags/redux/">redux</a><small>1</small></li>
+  
+    <li><a href="/tags/restful/">restful</a><small>1</small></li>
+  
+    <li><a href="/tags/sencha-touch/">sencha touch</a><small>2</small></li>
+  
+    <li><a href="/tags/sencha-touch/">sencha-touch</a><small>2</small></li>
+  
+    <li><a href="/tags/store/">store</a><small>1</small></li>
+  
+    <li><a href="/tags/sublime/">sublime</a><small>1</small></li>
+  
+    <li><a href="/tags/webp/">webp</a><small>1</small></li>
+  
+    <li><a href="/tags/websql/">websql</a><small>1</small></li>
+  
+    <li><a href="/tags/优化/">优化</a><small>2</small></li>
+  
+    <li><a href="/tags/兼容性/">兼容性</a><small>1</small></li>
+  
+    <li><a href="/tags/动画/">动画</a><small>1</small></li>
+  
+    <li><a href="/tags/图片压缩/">图片压缩</a><small>1</small></li>
+  
+    <li><a href="/tags/委托/">委托</a><small>1</small></li>
+  
+    <li><a href="/tags/导航/">导航</a><small>1</small></li>
+  
+    <li><a href="/tags/性能/">性能</a><small>1</small></li>
+  
+    <li><a href="/tags/性能优化/">性能优化</a><small>1</small></li>
+  
+    <li><a href="/tags/手势/">手势</a><small>1</small></li>
+  
+    <li><a href="/tags/注释/">注释</a><small>1</small></li>
+  
+    <li><a href="/tags/测试/">测试</a><small>1</small></li>
+  
+    <li><a href="/tags/渲染/">渲染</a><small>1</small></li>
+  
+    <li><a href="/tags/爬虫/">爬虫</a><small>1</small></li>
+  
+    <li><a href="/tags/翻译/">翻译</a><small>1</small></li>
+  
+    <li><a href="/tags/自动化文档/">自动化文档</a><small>1</small></li>
+  
+    <li><a href="/tags/触摸/">触摸</a><small>1</small></li>
+  
+    <li><a href="/tags/调试工具/">调试工具</a><small>1</small></li>
+  
+  </ul>
+</div>
+
+</aside>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div class="alignleft">
+  
+  &copy; 2016 Xue He
+  
+</div>
+<div class="clearfix"></div></footer>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+
+<script type="text/javascript">
+var disqus_shortname = 'hexohexue';
+
+(function(){
+  var dsq = document.createElement('script');
+  dsq.type = 'text/javascript';
+  dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/count.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+}());
+</script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+</body>
+</html>

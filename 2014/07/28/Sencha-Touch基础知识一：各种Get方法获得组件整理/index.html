@@ -1,0 +1,320 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Sencha Touch基础知识一：获取一个组件方法整理 | Persimmon Kneader</title>
+  <meta name="author" content="Xue He">
+  
+  <meta name="description" content="技术博客">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="Sencha Touch基础知识一：获取一个组件方法整理"/>
+  <meta property="og:site_name" content="Persimmon Kneader"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  <link href="/favicon.png" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="Persimmon Kneader" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  
+<script>
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+	ga('create', 'UA-52998995-1', 'auto');
+	ga('send', 'pageview');
+
+</script>
+
+
+  <script>
+  var _hmt = _hmt || [];
+  (function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?290e001b4a2e8fd868d1eea78cbf6f9f";
+    var s = document.getElementsByTagName("script")[0]; 
+    s.parentNode.insertBefore(hm, s);
+  })();
+  </script>
+</head>
+
+
+<body>
+  <header id="header" class="inner"><div class="alignleft">
+  <h1><a href="/">Persimmon Kneader</a></h1>
+  <h2><a href="/">Front-End Developer</a></h2>
+</div>
+<nav id="main-nav" class="alignright">
+  <ul>
+    
+      <li><a href="//">Home</a></li>
+    
+      <li><a href="//archives">Archives</a></li>
+    
+      <li><a href="//aboutme">About Me</a></li>
+    
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+<div class="clearfix"></div>
+</header>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper"><article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2014-07-28T14:33:20.000Z"><a href="/2014/07/28/Sencha-Touch基础知识一：各种Get方法获得组件整理/">2014-07-28</a></time>
+      
+      
+  
+    <h1 class="title">Sencha Touch基础知识一：获取一个组件方法整理</h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>获取一个组件有很多种方法。本文将分成四部分讲解：</p>
+<ol>
+<li>根据Id、itemId查找组件</li>
+<li>和Dom有关的获取</li>
+<li>使用选择器的查询获取组件</li>
+<li>使用选择器来查询获取dom元素</li>
+</ol>
+<p>此外本文还将介绍关于选择器Selector<br><a id="more"></a><br>至于在controller中常用的使用ref获取组件的方法，我用的不多，因为我使用了Deft Js。</p>
+<hr>
+<h2 id="u4E00_u3001_u6839_u636EId_u3001itemId_u67E5_u627E_u7EC4_u4EF6"><a href="#u4E00_u3001_u6839_u636EId_u3001itemId_u67E5_u627E_u7EC4_u4EF6" class="headerlink" title="一、根据Id、itemId查找组件"></a>一、根据Id、itemId查找组件</h2><h3 id="Ext-getCmp_28_u201CId_u201D_29"><a href="#Ext-getCmp_28_u201CId_u201D_29" class="headerlink" title="Ext.getCmp(“Id”)"></a>Ext.getCmp(“Id”)</h3><p>它会根据id值来查找一个已经存在的组件。<br>Ext.getCmp()中的参数只能是组件config中的id值，不能是itemId值。<br>它是<code>Ext.ComponentMgr.get()</code>的缩写版，当然啦，有缩写版干嘛还用复杂版~</p>
+<h3 id="getComponent_28_u201CitemId_u201D_29"><a href="#getComponent_28_u201CitemId_u201D_29" class="headerlink" title="getComponent(“itemId”)"></a>getComponent(“itemId”)</h3><p>举个使用的例子：<br><code>var son = father.getComponent(&#39;son&#39;);</code><br>这个方法获取组件只能够获取父组件下的第一层子组件,<strong>不能获得子组件的子组件</strong>，也就是说父亲只能拿到儿子，不能拿到孙子。<br>这个方法<strong>只能使用itemId值</strong>。作为查找的参数，无法通过id值，要用id值请用上面的方法。<br>此外，这个方法的参数还可以是一个数字，子组件表示在items的位置。</p>
+<h2 id="u4E8C_u3001_u548CDom_u6709_u5173_u7684_u83B7_u53D6"><a href="#u4E8C_u3001_u548CDom_u6709_u5173_u7684_u83B7_u53D6" class="headerlink" title="二、和Dom有关的获取"></a>二、和Dom有关的获取</h2><h3 id="Ext-getDom_28el_29"><a href="#Ext-getDom_28el_29" class="headerlink" title="Ext.getDom(el)"></a>Ext.getDom(el)</h3><p>参数el可以是：String (id),dom node,Ext.Element.<br>返回dom node。也就是说：我以孙子做参数，可以返回父亲（如果父亲没有爸爸了，否则还会返回父亲的父亲的父亲。。。直到头）<br>返回值是：HTMLElement</p>
+<h3 id="Ext-get_28element_29"><a href="#Ext-get_28element_29" class="headerlink" title="Ext.get(element)"></a>Ext.get(element)</h3><p>参数：<br>    String/HTMLElement/Ext.Element<br>    分别代表的是：node的id，dom node（上面提到），现有的element。</p>
+<p>一样，它的完整版写法是： Ext.dom.Element.get.<br>返回值：Ext.dom.Element，或null</p>
+<p>注意：Ext.getDom()&amp;Ext.get()中提到的id值，都不是我们组件中config里的id值，所以用config中的id值去查找，肯定都是不成功的。<br>示范：</p>
+<pre><code>Ext.define(&apos;test&apos;,{
+    extend:&apos;Ext.Container&apos;,
+    id:&apos;right&apos;,//这个可以
+    config:{
+        id:&apos;wrong&apos;//这个无法被找到
+    }
+});
+Ext.create(&apos;text&apos;,{
+    id:&apos;wrongstill&apos;//在create中的这个部分已经是属于config部分了，所以和上面一样，无法被找到
+});
+</code></pre><h2 id="u4E09_u3001_u4F7F_u7528_u9009_u62E9_u5668_u7684_u67E5_u8BE2_u83B7_u53D6_u7EC4_u4EF6"><a href="#u4E09_u3001_u4F7F_u7528_u9009_u62E9_u5668_u7684_u67E5_u8BE2_u83B7_u53D6_u7EC4_u4EF6" class="headerlink" title="三、使用选择器的查询获取组件"></a>三、使用选择器的查询获取组件</h2><h3 id="query_28selector_29"><a href="#query_28selector_29" class="headerlink" title="query(selector)"></a>query(selector)</h3><p>这是一个和<code>getComponent()</code>差不多的方法。<br>不过，query可以查询所有后代，<code>getComponent</code>只能查子代。<br>selector是一种表示选择条件的字符串，选择器。<br>它的返回值可以是一个数组（也就是说可以查询所有满足条件的子代）。</p>
+<h3 id="down_28_29_2Cup_28_29_2Cchild_28_29"><a href="#down_28_29_2Cup_28_29_2Cchild_28_29" class="headerlink" title="down(),up(),child()"></a>down(),up(),child()</h3><p>这些方法和query()是一样的用法。区别在于：<br>down：查询后代<br>up：查询父代<br>child：查询子代<br>他们的返回值都是一个组件，而不是一个数组！返回第一个查找到的组件。</p>
+<h3 id="Ext-ComponentQuery-query_28selector_2Croot_29"><a href="#Ext-ComponentQuery-query_28selector_2Croot_29" class="headerlink" title="Ext.ComponentQuery.query(selector,root)"></a>Ext.ComponentQuery.query(selector,root)</h3><p>这个方法是自定义根节点进行向下查找的。而上面的方法是已经确定了根节点，再进行查找的。<br>root是可选参数。</p>
+<h2 id="u56DB_u3001_u4F7F_u7528_u9009_u62E9_u5668_u6765_u67E5_u8BE2_u83B7_u53D6dom_u5143_u7D20"><a href="#u56DB_u3001_u4F7F_u7528_u9009_u62E9_u5668_u6765_u67E5_u8BE2_u83B7_u53D6dom_u5143_u7D20" class="headerlink" title="四、使用选择器来查询获取dom元素"></a>四、使用选择器来查询获取dom元素</h2><h3 id="query_28selector_29-1"><a href="#query_28selector_29-1" class="headerlink" title="query(selector)"></a>query(selector)</h3><p>和上面对组件的<code>query()</code>方法类似，查询所有后代。<br>返回HTMLElement元素（数组）。</p>
+<h3 id="select_28selector_2Ccomposite_29"><a href="#select_28selector_2Ccomposite_29" class="headerlink" title="select(selector,composite)"></a>select(selector,composite)</h3><p>composite是对选择取反，默认为false<br>这个方法的返回值是一个<code>Ext.dom.CompositeElementLite/Ext.dom.CompositeElement</code><br>它代表了所有符合条件的element，你可以统一对它操作。</p>
+<pre><code>var els = Ext.select(&quot;#some-el div.some-class&quot;);
+// or select directly from an existing element
+var el = Ext.get(&apos;some-el&apos;);
+el.select(&apos;div.some-class&apos;);
+
+els.setWidth(100); // all elements become 100 width
+els.hide(true); // all elements fade out and hide
+// or
+els.setWidth(100).hide(true);
+</code></pre><h3 id="down_28_29_2Cup_28_29_2Cchild_28_29_2Cprev_28_29"><a href="#down_28_29_2Cup_28_29_2Cchild_28_29_2Cprev_28_29" class="headerlink" title="down(),up(),child(),prev()"></a>down(),up(),child(),prev()</h3><p>和上面组件的方法一样，这些方法和query()是一样的用法。区别在于：<br>down：查询后代<br>up：查询父代<br>child：查询子代<br>prev：跳过文本结点查找之前的兄弟姐妹（同一代）<br>next：跳过文本结点查找之前的兄弟姐妹（同一代）<br>last：获得最后一个子代<br>first：获得第一个子代<br>他们的返回值都是一个HTMLElement/Ext.dom.Element，而不是一个数组！返回第一个查找到的组件。</p>
+<h3 id="Ext-query_28selector_2C_5Broot_5D_29"><a href="#Ext-query_28selector_2C_5Broot_5D_29" class="headerlink" title="Ext.query(selector,[root])"></a>Ext.query(selector,[root])</h3><p>它的完整形式是：<code>Ext.dom.Query.select</code><br>它和<code>Ext.DomQuery.select()</code>的使用方法是一样的。<br>方法和上面的<code>Ext.ComponentQuery.query</code>方法一样，不过查找的结果是一个或多个HTMLElement（数组）。</p>
+<h3 id="Ext-DomQuery-selectNode_28selector_2Croot_29"><a href="#Ext-DomQuery-selectNode_28selector_2Croot_29" class="headerlink" title="Ext.DomQuery.selectNode(selector,root)"></a>Ext.DomQuery.selectNode(selector,root)</h3><p>和上面的方法一样，返回一个HTMLElement。</p>
+<h2 id="u4E94_u3001selector"><a href="#u4E94_u3001selector" class="headerlink" title="五、selector"></a>五、selector</h2><p>说了上面的方法，一定会需要知道如何使用选择器。<br>选择器的方法和css是很相似的：<br><a href="http://www.w3.org/TR/css3-selectors/" target="_blank" rel="external">css选择器的方法</a></p>
+<h4 id="id_u9009_u62E9_u5668_uFF1A_23buttonId"><a href="#id_u9009_u62E9_u5668_uFF1A_23buttonId" class="headerlink" title="id选择器：#buttonId"></a>id选择器：#buttonId</h4><h4 id="u7C7B_u522B_u9009_u62E9_u5668_uFF1A-buttonclass"><a href="#u7C7B_u522B_u9009_u62E9_u5668_uFF1A-buttonclass" class="headerlink" title="类别选择器：.buttonclass"></a>类别选择器：.buttonclass</h4><h4 id="u5C5E_u6027_u9009_u62E9_u5668_uFF1Abutton_5Btext__3D__u201Cok_u201D_5D"><a href="#u5C5E_u6027_u9009_u62E9_u5668_uFF1Abutton_5Btext__3D__u201Cok_u201D_5D" class="headerlink" title="属性选择器：button[text = “ok”]"></a>属性选择器：button[text = “ok”]</h4><p>可以选择具有某个属性，或者某个属性为某个值的组件</p>
+<h4 id="u540E_u4EE3_u9009_u62E9_u5668_uFF1A_23father_panel"><a href="#u540E_u4EE3_u9009_u62E9_u5668_uFF1A_23father_panel" class="headerlink" title="后代选择器：#father panel"></a>后代选择器：#father panel</h4><h4 id="u5B50_u9009_u62E9_u5668_uFF1A_23father__26gt_3B_panel"><a href="#u5B50_u9009_u62E9_u5668_uFF1A_23father__26gt_3B_panel" class="headerlink" title="子选择器：#father &gt; panel"></a>子选择器：#father &gt; panel</h4><h4 id="u7FA4_u7EC4_u9009_u62E9_u5668_uFF1Abutton_2Cpanel"><a href="#u7FA4_u7EC4_u9009_u62E9_u5668_uFF1Abutton_2Cpanel" class="headerlink" title="群组选择器：button,panel"></a>群组选择器：button,panel</h4><h4 id="u76F8_u90BB_u540C_u80DE_u9009_u62E9_u5668_uFF1Ah2_+_p//_u540C_u4E00_u4E2A_u7236_u5143_u7D20_u4E0B_u67D0_u4E2A_u5143_u7D20_u4E4B_u540E_u7684_u5143_u7D20_u3002"><a href="#u76F8_u90BB_u540C_u80DE_u9009_u62E9_u5668_uFF1Ah2_+_p//_u540C_u4E00_u4E2A_u7236_u5143_u7D20_u4E0B_u67D0_u4E2A_u5143_u7D20_u4E4B_u540E_u7684_u5143_u7D20_u3002" class="headerlink" title="相邻同胞选择器：h2 + p//同一个父元素下某个元素之后的元素。"></a>相邻同胞选择器：h2 + p//同一个父元素下某个元素之后的元素。</h4>
+      
+    </div>
+    <footer>
+      
+        
+  
+  <div class="categories">
+    <a href="/categories/sencha-touch/">sencha touch</a>
+  </div>
+
+        
+  
+  <div class="tags">
+    <a href="/tags/sencha-touch/">sencha touch</a>
+  </div>
+
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+<section id="comment">
+  <h1 class="title">留言</h1>
+
+  
+  <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+  
+</section>
+
+</div></div>
+    <aside id="sidebar" class="alignright">
+  <div class="search">
+  <form action="//google.com/search" method="get" accept-charset="utf-8">
+    <input type="search" name="q" results="0" placeholder="搜索">
+    <input type="hidden" name="q" value="site:yukihe.com">
+  </form>
+</div>
+
+  
+<div class="widget tag">
+  <h3 class="title">分类</h3>
+  <ul class="entry">
+  
+    <li><a href="/categories/ExtJs/">ExtJs</a><small>1</small></li>
+  
+    <li><a href="/categories/css/">css</a><small>5</small></li>
+  
+    <li><a href="/categories/markdown/">markdown</a><small>1</small></li>
+  
+    <li><a href="/categories/redux/">redux</a><small>1</small></li>
+  
+    <li><a href="/categories/sencha-touch/">sencha touch</a><small>3</small></li>
+  
+    <li><a href="/categories/图片压缩/">图片压缩</a><small>1</small></li>
+  
+    <li><a href="/categories/工具/">工具</a><small>3</small></li>
+  
+    <li><a href="/categories/性能优化/">性能优化</a><small>1</small></li>
+  
+    <li><a href="/categories/爬虫/">爬虫</a><small>1</small></li>
+  
+    <li><a href="/categories/自动化文档/">自动化文档</a><small>1</small></li>
+  
+  </ul>
+</div>
+
+
+  
+<div class="widget tag">
+  <h3 class="title">标签</h3>
+  <ul class="entry">
+  
+    <li><a href="/tags/alfred/">alfred</a><small>1</small></li>
+  
+    <li><a href="/tags/browsersync/">browsersync</a><small>1</small></li>
+  
+    <li><a href="/tags/css/">css</a><small>2</small></li>
+  
+    <li><a href="/tags/css3/">css3</a><small>4</small></li>
+  
+    <li><a href="/tags/gradient/">gradient</a><small>1</small></li>
+  
+    <li><a href="/tags/hexo/">hexo</a><small>1</small></li>
+  
+    <li><a href="/tags/markdown/">markdown</a><small>1</small></li>
+  
+    <li><a href="/tags/phantomJS/">phantomJS</a><small>1</small></li>
+  
+    <li><a href="/tags/phantomJs/">phantomJs</a><small>1</small></li>
+  
+    <li><a href="/tags/proxy/">proxy</a><small>1</small></li>
+  
+    <li><a href="/tags/react/">react</a><small>1</small></li>
+  
+    <li><a href="/tags/redux/">redux</a><small>1</small></li>
+  
+    <li><a href="/tags/restful/">restful</a><small>1</small></li>
+  
+    <li><a href="/tags/sencha-touch/">sencha touch</a><small>2</small></li>
+  
+    <li><a href="/tags/sencha-touch/">sencha-touch</a><small>2</small></li>
+  
+    <li><a href="/tags/store/">store</a><small>1</small></li>
+  
+    <li><a href="/tags/sublime/">sublime</a><small>1</small></li>
+  
+    <li><a href="/tags/webp/">webp</a><small>1</small></li>
+  
+    <li><a href="/tags/websql/">websql</a><small>1</small></li>
+  
+    <li><a href="/tags/优化/">优化</a><small>2</small></li>
+  
+    <li><a href="/tags/兼容性/">兼容性</a><small>1</small></li>
+  
+    <li><a href="/tags/动画/">动画</a><small>1</small></li>
+  
+    <li><a href="/tags/图片压缩/">图片压缩</a><small>1</small></li>
+  
+    <li><a href="/tags/委托/">委托</a><small>1</small></li>
+  
+    <li><a href="/tags/导航/">导航</a><small>1</small></li>
+  
+    <li><a href="/tags/性能/">性能</a><small>1</small></li>
+  
+    <li><a href="/tags/性能优化/">性能优化</a><small>1</small></li>
+  
+    <li><a href="/tags/手势/">手势</a><small>1</small></li>
+  
+    <li><a href="/tags/注释/">注释</a><small>1</small></li>
+  
+    <li><a href="/tags/测试/">测试</a><small>1</small></li>
+  
+    <li><a href="/tags/渲染/">渲染</a><small>1</small></li>
+  
+    <li><a href="/tags/爬虫/">爬虫</a><small>1</small></li>
+  
+    <li><a href="/tags/翻译/">翻译</a><small>1</small></li>
+  
+    <li><a href="/tags/自动化文档/">自动化文档</a><small>1</small></li>
+  
+    <li><a href="/tags/触摸/">触摸</a><small>1</small></li>
+  
+    <li><a href="/tags/调试工具/">调试工具</a><small>1</small></li>
+  
+  </ul>
+</div>
+
+</aside>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div class="alignleft">
+  
+  &copy; 2016 Xue He
+  
+</div>
+<div class="clearfix"></div></footer>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+
+<script type="text/javascript">
+var disqus_shortname = 'hexohexue';
+
+(function(){
+  var dsq = document.createElement('script');
+  dsq.type = 'text/javascript';
+  dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+}());
+</script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+</body>
+</html>

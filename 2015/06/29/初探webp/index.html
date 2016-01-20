@@ -1,0 +1,327 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>webp初探 | Persimmon Kneader</title>
+  <meta name="author" content="Xue He">
+  
+  <meta name="description" content="技术博客">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="webp初探"/>
+  <meta property="og:site_name" content="Persimmon Kneader"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  <link href="/favicon.png" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="Persimmon Kneader" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  
+<script>
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+	ga('create', 'UA-52998995-1', 'auto');
+	ga('send', 'pageview');
+
+</script>
+
+
+  <script>
+  var _hmt = _hmt || [];
+  (function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?290e001b4a2e8fd868d1eea78cbf6f9f";
+    var s = document.getElementsByTagName("script")[0]; 
+    s.parentNode.insertBefore(hm, s);
+  })();
+  </script>
+</head>
+
+
+<body>
+  <header id="header" class="inner"><div class="alignleft">
+  <h1><a href="/">Persimmon Kneader</a></h1>
+  <h2><a href="/">Front-End Developer</a></h2>
+</div>
+<nav id="main-nav" class="alignright">
+  <ul>
+    
+      <li><a href="//">Home</a></li>
+    
+      <li><a href="//archives">Archives</a></li>
+    
+      <li><a href="//aboutme">About Me</a></li>
+    
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+<div class="clearfix"></div>
+</header>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper"><article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2015-06-29T13:21:52.000Z"><a href="/2015/06/29/初探webp/">2015-06-29</a></time>
+      
+      
+  
+    <h1 class="title">webp初探</h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>webp格式是目前各大厂商大热图片压缩格式。各种优势已经是路人皆知了。<br>最近测试使用了一下webp格式。</p>
+<h1 id="webp_u4ECB_u7ECD"><a href="#webp_u4ECB_u7ECD" class="headerlink" title="webp介绍"></a>webp介绍</h1><p>这个其实不用多说了，就是一种图片格式。目前在移动端上只有安卓支持它，ios并不支持。</p>
+<h2 id="u4F7F_u7528_u65B9_u6CD5"><a href="#u4F7F_u7528_u65B9_u6CD5" class="headerlink" title="使用方法"></a>使用方法</h2><p>在chrome上是兼容的。Safari和firefox不兼容。<br>具体的兼容性请查看<a href="http://caniuse.com/#feat=webp" target="_blank" rel="external">caniuse</a><br>这里只介绍了在移动端上的情况。<br><a id="more"></a></p>
+<h3 id="u5982_u679C_u662F_u5728_u517C_u5BB9_u5B83_u7684Android_u4E0A_u7684_u8BDD_uFF1A"><a href="#u5982_u679C_u662F_u5728_u517C_u5BB9_u5B83_u7684Android_u4E0A_u7684_u8BDD_uFF1A" class="headerlink" title="如果是在兼容它的Android上的话："></a>如果是在兼容它的Android上的话：</h3><p>直接作为img标签或者作为background都可以。</p>
+<h3 id="u975E_u652F_u6301_u8BBE_u5907"><a href="#u975E_u652F_u6301_u8BBE_u5907" class="headerlink" title="非支持设备"></a>非支持设备</h3><p>如果设备不支持这个图片，那么直接写入在img或background中都是无法显示图片的。必须将图片转化成PNG后才能读取。<br>有两种将转化的思路</p>
+<ul>
+<li>使用js将图片转化为base64的PNG格式。<br>目前已经有了转化的js库<a href="http://libwebpjs.appspot.com/" target="_blank" rel="external">http://libwebpjs.appspot.com/</a>，但是它的缺点是<strong>只支持有损webp的转化</strong>。此外它在<strong>移动端上的处理速度非常慢</strong>，很小的一张图都需要2-3秒以上，大图300k的大图甚至需要10s+。再来是这个解析库本身比较大（50KB+）,如果要加载的话成本略大。所以我认为在移动端上使用js库来进行转化是不可取的。</li>
+<li>让native提供转化的方法，让转化交给native来处理，将处理的结果传递给前端。<br>我并没有做native的相关测试。但是目前很多使用了webp的公司在移动端上都使用了native做转化的方式去处理的。</li>
+</ul>
+<h3 id="u4F7F_u7528_u60C5_u51B5_u5206_u6790"><a href="#u4F7F_u7528_u60C5_u51B5_u5206_u6790" class="headerlink" title="使用情况分析"></a>使用情况分析</h3><p>下面是适合的场景排序：</p>
+<ol>
+<li>仅仅在native中会出现的图片。全部使用webp格式，在ios中做native的PNG转化。</li>
+<li>在移动端各平台上（微信，UC等等）都会出现的图片 | 在pc端也会出现的图片。同时保存一份webp和原始格式。</li>
+</ol>
+<p>如果是1的做法，那么省流量+省空间。<br>如果是2的做法，则省流量+费空间。<br>但是如果是CDN流量非常高的情况下，那么空间的代价应该比不上CDN的。</p>
+<h1 id="webp_u538B_u7F29_u6307_u4EE4"><a href="#webp_u538B_u7F29_u6307_u4EE4" class="headerlink" title="webp压缩指令"></a>webp压缩指令</h1><p>我目前测试时使用的webp压缩的cli工具来自于谷歌。</p>
+<h1 id="cli"><a href="#cli" class="headerlink" title="cli"></a>cli</h1><p>webp转化的工具地址<a href="https://developers.google.com/speed/webp/docs/precompiled" target="_blank" rel="external">https://developers.google.com/speed/webp/docs/precompiled</a><br>cli详细的使用方式见这里：<a href="https://developers.google.com/speed/webp/docs/using" target="_blank" rel="external">https://developers.google.com/speed/webp/docs/using</a><br>在这里贴出简单的转化webp的方法，在命令行中键入：</p>
+<pre><code>cwebp -q 80 image.png -o image.webp
+# 意思为将image.png有损压缩80品质输出位image.webp中。
+</code></pre><p>如果是无损压缩的话，则—lossless即可。</p>
+<h1 id="u538B_u7F29_u573A_u666F"><a href="#u538B_u7F29_u573A_u666F" class="headerlink" title="压缩场景"></a>压缩场景</h1><p>在使用若干jpg,png进行试验后发现：</p>
+<ol>
+<li>相同质量的情况下，webp压缩的大小要比jpg,png小20%-30%；</li>
+<li>有损压缩优势明显，无损压缩0优势。</li>
+<li>压缩带透明度的png的时候竟然比原图还大。</li>
+</ol>
+<p>所以综上所述，使用webp的场景应该是不透明的有损压缩。</p>
+<h1 id="u517C_u5BB9_u6027_u6D4B_u8BD5"><a href="#u517C_u5BB9_u6027_u6D4B_u8BD5" class="headerlink" title="兼容性测试"></a>兼容性测试</h1><p>谷歌官方提供的兼容性测试的代码如下：</p>
+<pre><code>// check_webp_feature:
+//   &apos;feature&apos; can be one of &apos;lossy&apos;, &apos;lossless&apos;, &apos;alpha&apos; or &apos;animation&apos;.
+//   &apos;callback(feature, result)&apos; will be passed back the detection result (in an asynchronous way!)
+function check_webp_feature(feature, callback) {
+    var kTestImages = {
+        lossy: &quot;UklGRiIAAABXRUJQVlA4IBYAAAAwAQCdASoBAAEADsD+JaQAA3AAAAAA&quot;,
+        lossless: &quot;UklGRhoAAABXRUJQVlA4TA0AAAAvAAAAEAcQERGIiP4HAA==&quot;,
+        alpha: &quot;UklGRkoAAABXRUJQVlA4WAoAAAAQAAAAAAAAAAAAQUxQSAwAAAARBxAR/Q9ERP8DAABWUDggGAAAABQBAJ0BKgEAAQAAAP4AAA3AAP7mtQAAAA==&quot;
+        animation: &quot;UklGRlIAAABXRUJQVlA4WAoAAAASAAAAAAAAAAAAQU5JTQYAAAD/////AABBTk1GJgAAAAAAAAAAAAAAAAAAAGQAAABWUDhMDQAAAC8AAAAQBxAREYiI/gcA&quot;
+    };
+    var img = new Image();
+    img.onload = function () {
+        var result = (img.width &gt; 0) &amp;&amp; (img.height &gt; 0);
+        callback(feature, result);
+    };
+    img.onerror = function () {
+        callback(feature, false);
+    };
+    img.src = &quot;data:image/webp;base64,&quot; + kTestImages[feature];
+}
+</code></pre><p>显然，这个兼容性的检查是异步的。不能在初始的时候就知道是否能够解析webp。</p>
+<h1 id="u6548_u7387"><a href="#u6548_u7387" class="headerlink" title="效率"></a>效率</h1><p>解析时间：就webp格式的解析来说，以肉眼是感受不到差别的。斯认为没有必要去纠结这些略微多出来的解析时间。</p>
+<h1 id="u53C2_u8003"><a href="#u53C2_u8003" class="headerlink" title="参考"></a>参考</h1><p>详细的数据参考：<br><a href="http://isux.tencent.com/introduction-of-webp.html" target="_blank" rel="external">WebP 探寻之路</a><br><a href="http://isux.tencent.com/zhitu.html" target="_blank" rel="external">智图—源于QQ空间图片WebP化的思考</a></p>
+
+      
+    </div>
+    <footer>
+      
+        
+  
+  <div class="categories">
+    <a href="/categories/图片压缩/">图片压缩</a>
+  </div>
+
+        
+  
+  <div class="tags">
+    <a href="/tags/webp/">webp</a>, <a href="/tags/图片压缩/">图片压缩</a>
+  </div>
+
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+<section id="comment">
+  <h1 class="title">留言</h1>
+
+  
+  <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+  
+</section>
+
+</div></div>
+    <aside id="sidebar" class="alignright">
+  <div class="search">
+  <form action="//google.com/search" method="get" accept-charset="utf-8">
+    <input type="search" name="q" results="0" placeholder="搜索">
+    <input type="hidden" name="q" value="site:yukihe.com">
+  </form>
+</div>
+
+  
+<div class="widget tag">
+  <h3 class="title">分类</h3>
+  <ul class="entry">
+  
+    <li><a href="/categories/ExtJs/">ExtJs</a><small>1</small></li>
+  
+    <li><a href="/categories/css/">css</a><small>5</small></li>
+  
+    <li><a href="/categories/markdown/">markdown</a><small>1</small></li>
+  
+    <li><a href="/categories/redux/">redux</a><small>1</small></li>
+  
+    <li><a href="/categories/sencha-touch/">sencha touch</a><small>3</small></li>
+  
+    <li><a href="/categories/图片压缩/">图片压缩</a><small>1</small></li>
+  
+    <li><a href="/categories/工具/">工具</a><small>3</small></li>
+  
+    <li><a href="/categories/性能优化/">性能优化</a><small>1</small></li>
+  
+    <li><a href="/categories/爬虫/">爬虫</a><small>1</small></li>
+  
+    <li><a href="/categories/自动化文档/">自动化文档</a><small>1</small></li>
+  
+  </ul>
+</div>
+
+
+  
+<div class="widget tag">
+  <h3 class="title">标签</h3>
+  <ul class="entry">
+  
+    <li><a href="/tags/alfred/">alfred</a><small>1</small></li>
+  
+    <li><a href="/tags/browsersync/">browsersync</a><small>1</small></li>
+  
+    <li><a href="/tags/css/">css</a><small>2</small></li>
+  
+    <li><a href="/tags/css3/">css3</a><small>4</small></li>
+  
+    <li><a href="/tags/gradient/">gradient</a><small>1</small></li>
+  
+    <li><a href="/tags/hexo/">hexo</a><small>1</small></li>
+  
+    <li><a href="/tags/markdown/">markdown</a><small>1</small></li>
+  
+    <li><a href="/tags/phantomJS/">phantomJS</a><small>1</small></li>
+  
+    <li><a href="/tags/phantomJs/">phantomJs</a><small>1</small></li>
+  
+    <li><a href="/tags/proxy/">proxy</a><small>1</small></li>
+  
+    <li><a href="/tags/react/">react</a><small>1</small></li>
+  
+    <li><a href="/tags/redux/">redux</a><small>1</small></li>
+  
+    <li><a href="/tags/restful/">restful</a><small>1</small></li>
+  
+    <li><a href="/tags/sencha-touch/">sencha touch</a><small>2</small></li>
+  
+    <li><a href="/tags/sencha-touch/">sencha-touch</a><small>2</small></li>
+  
+    <li><a href="/tags/store/">store</a><small>1</small></li>
+  
+    <li><a href="/tags/sublime/">sublime</a><small>1</small></li>
+  
+    <li><a href="/tags/webp/">webp</a><small>1</small></li>
+  
+    <li><a href="/tags/websql/">websql</a><small>1</small></li>
+  
+    <li><a href="/tags/优化/">优化</a><small>2</small></li>
+  
+    <li><a href="/tags/兼容性/">兼容性</a><small>1</small></li>
+  
+    <li><a href="/tags/动画/">动画</a><small>1</small></li>
+  
+    <li><a href="/tags/图片压缩/">图片压缩</a><small>1</small></li>
+  
+    <li><a href="/tags/委托/">委托</a><small>1</small></li>
+  
+    <li><a href="/tags/导航/">导航</a><small>1</small></li>
+  
+    <li><a href="/tags/性能/">性能</a><small>1</small></li>
+  
+    <li><a href="/tags/性能优化/">性能优化</a><small>1</small></li>
+  
+    <li><a href="/tags/手势/">手势</a><small>1</small></li>
+  
+    <li><a href="/tags/注释/">注释</a><small>1</small></li>
+  
+    <li><a href="/tags/测试/">测试</a><small>1</small></li>
+  
+    <li><a href="/tags/渲染/">渲染</a><small>1</small></li>
+  
+    <li><a href="/tags/爬虫/">爬虫</a><small>1</small></li>
+  
+    <li><a href="/tags/翻译/">翻译</a><small>1</small></li>
+  
+    <li><a href="/tags/自动化文档/">自动化文档</a><small>1</small></li>
+  
+    <li><a href="/tags/触摸/">触摸</a><small>1</small></li>
+  
+    <li><a href="/tags/调试工具/">调试工具</a><small>1</small></li>
+  
+  </ul>
+</div>
+
+</aside>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div class="alignleft">
+  
+  &copy; 2016 Xue He
+  
+</div>
+<div class="clearfix"></div></footer>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+
+<script type="text/javascript">
+var disqus_shortname = 'hexohexue';
+
+(function(){
+  var dsq = document.createElement('script');
+  dsq.type = 'text/javascript';
+  dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+}());
+</script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+</body>
+</html>

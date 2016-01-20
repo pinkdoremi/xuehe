@@ -1,0 +1,304 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>利用层模型和硬件加速来优化页面渲染 | Persimmon Kneader</title>
+  <meta name="author" content="Xue He">
+  
+  <meta name="description" content="技术博客">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="利用层模型和硬件加速来优化页面渲染"/>
+  <meta property="og:site_name" content="Persimmon Kneader"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  <link href="/favicon.png" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="Persimmon Kneader" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  
+<script>
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+	ga('create', 'UA-52998995-1', 'auto');
+	ga('send', 'pageview');
+
+</script>
+
+
+  <script>
+  var _hmt = _hmt || [];
+  (function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?290e001b4a2e8fd868d1eea78cbf6f9f";
+    var s = document.getElementsByTagName("script")[0]; 
+    s.parentNode.insertBefore(hm, s);
+  })();
+  </script>
+</head>
+
+
+<body>
+  <header id="header" class="inner"><div class="alignleft">
+  <h1><a href="/">Persimmon Kneader</a></h1>
+  <h2><a href="/">Front-End Developer</a></h2>
+</div>
+<nav id="main-nav" class="alignright">
+  <ul>
+    
+      <li><a href="//">Home</a></li>
+    
+      <li><a href="//archives">Archives</a></li>
+    
+      <li><a href="//aboutme">About Me</a></li>
+    
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+<div class="clearfix"></div>
+</header>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper"><article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2015-03-30T14:52:22.000Z"><a href="/2015/03/30/利用层模型和硬件加速来优化页面渲染/">2015-03-30</a></time>
+      
+      
+  
+    <h1 class="title">利用层模型和硬件加速来优化页面渲染</h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>偶然间阅读到一篇文章，是关于<a href="http://web.jobbole.com/82195/" target="_blank" rel="external">页面滚动性能</a>的。读完之后，特别是看完那个demo的时候顿时觉得好像很厉害的样子，但是又不太懂，所以去了解了许多webkit硬件加速和页面渲染这方面的知识，觉得应该整理分享出来。<br><a id="more"></a></p>
+<h1 id="u9875_u9762_u6E32_u67D3_u7684_u8FC7_u7A0B"><a href="#u9875_u9762_u6E32_u67D3_u7684_u8FC7_u7A0B" class="headerlink" title="页面渲染的过程"></a>页面渲染的过程</h1><p>页面渲染的过程这方面的文章相信去找的话应该能找到很多。<br>比如说：</p>
+<ul>
+<li><a href="http://blog.jobbole.com/72692/" target="_blank" rel="external">为什么每个前端开发者都要理解网页渲染</a><br>了解这些基础的页面渲染很重要，但是接下来要说的，只了解这些基础的渲染是远远不够的。<br>所以来谈谈层模型。</li>
+</ul>
+<h1 id="u5C42_u6A21_u578B"><a href="#u5C42_u6A21_u578B" class="headerlink" title="层模型"></a>层模型</h1><p>什么是层模型，简单的说，一张网页就是很多层。如果玩过ps的话，就会很明白。比如说，一张蓝天白云小桥流水的画可能就分成很多层</p>
+<ul>
+<li>蓝天一层，这个是背景，短时间内是不会变的。</li>
+<li>白云飘飘，白云又是相对于蓝天会动的。</li>
+<li>小桥流水，这些又是和白云，蓝天又不是一层，属于近景。</li>
+</ul>
+<p>假如我是个做动画片的，蓝天我肯定用固定的一张图，动都不动，白云我会再用一张图，让它在背景下移动。小桥流水因为在白云一层的上面，在蓝天一层的上上面，所以肯定不会和蓝天画在同一层上，再分出来。<br>这样一来，这个画面就有至少三层了（也许有许多云那就许多层= =）。<br>层模型差不多就是这个道理，浏览器对于同一层的内容，如果有那么一点点变化，就比如说蓝天上多了一只鸟，浏览器就要重画一大片蓝天。<br>而浏览器重画一片蓝天多累啊！如果这只鸟和蓝天一层分离了，鸟不变（煽动翅膀如果是变的话就算是变了吧），蓝天不变，浏览器就只要控制鸟这个东西的位置移动，却不用重新再画一遍鸟和天了。<br>这么一来，浏览器就省事了很多。</p>
+<h1 id="u786C_u4EF6_u52A0_u901F"><a href="#u786C_u4EF6_u52A0_u901F" class="headerlink" title="硬件加速"></a>硬件加速</h1><p>这些层是存储在GPU自己的内存VRAM中的，而不是CPU的RAM。所以开启这些层的方法往往也被成为开启硬件加速。<br>但是也许很多人只知道开启硬件加速的方法但是不知道是否真的开启了硬件加速。<br>在chrome的开发者工具中有可以显示页面的层级的选项。在打开[&gt;三]按钮后Rendering选项卡的Show composited layer borders这个功能，此外，如果勾选Show paint rectangles可以观察到什么时候进行了页面渲染。<br>如果有效的开启了硬件加速，这个div就会有个框框被框住。</p>
+<h2 id="u9875_u9762_u4F55_u65F6_u91CD_u7ED8_uFF0C_u4F55_u65F6_u91CD_u6392"><a href="#u9875_u9762_u4F55_u65F6_u91CD_u7ED8_uFF0C_u4F55_u65F6_u91CD_u6392" class="headerlink" title="页面何时重绘，何时重排"></a>页面何时重绘，何时重排</h2><p>页面的变化可能会进行两个步骤：<br>1.重绘 2.重排<br>重绘就是重新画，重排就是重新排位置。这个好理解的。<br>我们可以利用硬件加速来减少重绘的时间。</p>
+<h2 id="u5F00_u542F_u786C_u4EF6_u52A0_u901F_u7684_u65B9_u6CD5"><a href="#u5F00_u542F_u786C_u4EF6_u52A0_u901F_u7684_u65B9_u6CD5" class="headerlink" title="开启硬件加速的方法"></a>开启硬件加速的方法</h2><ul>
+<li>animation的东西</li>
+<li>开启了3d变形</li>
+<li>canvas</li>
+<li>webGL</li>
+<li>vedio vediodecode</li>
+<li>flash 3d</li>
+<li>compositing</li>
+<li>具有硬件加速的CSS滤镜的元素</li>
+<li>有子元素自己有层</li>
+<li>它有z-index比它小的兄弟已经有自己的层的</li>
+</ul>
+<h2 id="u4E3E_u4E2A_u573A_u666F"><a href="#u4E3E_u4E2A_u573A_u666F" class="headerlink" title="举个场景"></a>举个场景</h2><p>显然，合理地添加开关可以有效的减少页面重绘的次数。<br>比如说，有个返回顶部的按钮，如果不为他添加新的一层的话，每当滚动页面，这个返回顶部因为和背景处于同一层级，但是这一层却明显长得不一样了（返回顶部的位置抬高了/掉下来了），所以返回顶部附近的一大块区域每滚一px都会被重绘，用chrome的观察重绘功能可以看得很清楚。<br>但是加了硬件加速，就会发现，完全没有再重绘了。</p>
+<h2 id="u663E_u7136_u8FD9_u4E5F_u4E0D_u80FD_u88AB_u6EE5_u7528"><a href="#u663E_u7136_u8FD9_u4E5F_u4E0D_u80FD_u88AB_u6EE5_u7528" class="headerlink" title="显然这也不能被滥用"></a>显然这也不能被滥用</h2><p>如果GPU的VRAM被放了太多层肯定会被挤爆崩溃。显然开太多硬件加速会浪费内存，物极必反嘛。</p>
+
+      
+    </div>
+    <footer>
+      
+        
+  
+  <div class="categories">
+    <a href="/categories/性能优化/">性能优化</a>
+  </div>
+
+        
+  
+  <div class="tags">
+    <a href="/tags/css3/">css3</a>, <a href="/tags/性能优化/">性能优化</a>, <a href="/tags/渲染/">渲染</a>
+  </div>
+
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+<section id="comment">
+  <h1 class="title">留言</h1>
+
+  
+  <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+  
+</section>
+
+</div></div>
+    <aside id="sidebar" class="alignright">
+  <div class="search">
+  <form action="//google.com/search" method="get" accept-charset="utf-8">
+    <input type="search" name="q" results="0" placeholder="搜索">
+    <input type="hidden" name="q" value="site:yukihe.com">
+  </form>
+</div>
+
+  
+<div class="widget tag">
+  <h3 class="title">分类</h3>
+  <ul class="entry">
+  
+    <li><a href="/categories/ExtJs/">ExtJs</a><small>1</small></li>
+  
+    <li><a href="/categories/css/">css</a><small>5</small></li>
+  
+    <li><a href="/categories/markdown/">markdown</a><small>1</small></li>
+  
+    <li><a href="/categories/redux/">redux</a><small>1</small></li>
+  
+    <li><a href="/categories/sencha-touch/">sencha touch</a><small>3</small></li>
+  
+    <li><a href="/categories/图片压缩/">图片压缩</a><small>1</small></li>
+  
+    <li><a href="/categories/工具/">工具</a><small>3</small></li>
+  
+    <li><a href="/categories/性能优化/">性能优化</a><small>1</small></li>
+  
+    <li><a href="/categories/爬虫/">爬虫</a><small>1</small></li>
+  
+    <li><a href="/categories/自动化文档/">自动化文档</a><small>1</small></li>
+  
+  </ul>
+</div>
+
+
+  
+<div class="widget tag">
+  <h3 class="title">标签</h3>
+  <ul class="entry">
+  
+    <li><a href="/tags/alfred/">alfred</a><small>1</small></li>
+  
+    <li><a href="/tags/browsersync/">browsersync</a><small>1</small></li>
+  
+    <li><a href="/tags/css/">css</a><small>2</small></li>
+  
+    <li><a href="/tags/css3/">css3</a><small>4</small></li>
+  
+    <li><a href="/tags/gradient/">gradient</a><small>1</small></li>
+  
+    <li><a href="/tags/hexo/">hexo</a><small>1</small></li>
+  
+    <li><a href="/tags/markdown/">markdown</a><small>1</small></li>
+  
+    <li><a href="/tags/phantomJS/">phantomJS</a><small>1</small></li>
+  
+    <li><a href="/tags/phantomJs/">phantomJs</a><small>1</small></li>
+  
+    <li><a href="/tags/proxy/">proxy</a><small>1</small></li>
+  
+    <li><a href="/tags/react/">react</a><small>1</small></li>
+  
+    <li><a href="/tags/redux/">redux</a><small>1</small></li>
+  
+    <li><a href="/tags/restful/">restful</a><small>1</small></li>
+  
+    <li><a href="/tags/sencha-touch/">sencha touch</a><small>2</small></li>
+  
+    <li><a href="/tags/sencha-touch/">sencha-touch</a><small>2</small></li>
+  
+    <li><a href="/tags/store/">store</a><small>1</small></li>
+  
+    <li><a href="/tags/sublime/">sublime</a><small>1</small></li>
+  
+    <li><a href="/tags/webp/">webp</a><small>1</small></li>
+  
+    <li><a href="/tags/websql/">websql</a><small>1</small></li>
+  
+    <li><a href="/tags/优化/">优化</a><small>2</small></li>
+  
+    <li><a href="/tags/兼容性/">兼容性</a><small>1</small></li>
+  
+    <li><a href="/tags/动画/">动画</a><small>1</small></li>
+  
+    <li><a href="/tags/图片压缩/">图片压缩</a><small>1</small></li>
+  
+    <li><a href="/tags/委托/">委托</a><small>1</small></li>
+  
+    <li><a href="/tags/导航/">导航</a><small>1</small></li>
+  
+    <li><a href="/tags/性能/">性能</a><small>1</small></li>
+  
+    <li><a href="/tags/性能优化/">性能优化</a><small>1</small></li>
+  
+    <li><a href="/tags/手势/">手势</a><small>1</small></li>
+  
+    <li><a href="/tags/注释/">注释</a><small>1</small></li>
+  
+    <li><a href="/tags/测试/">测试</a><small>1</small></li>
+  
+    <li><a href="/tags/渲染/">渲染</a><small>1</small></li>
+  
+    <li><a href="/tags/爬虫/">爬虫</a><small>1</small></li>
+  
+    <li><a href="/tags/翻译/">翻译</a><small>1</small></li>
+  
+    <li><a href="/tags/自动化文档/">自动化文档</a><small>1</small></li>
+  
+    <li><a href="/tags/触摸/">触摸</a><small>1</small></li>
+  
+    <li><a href="/tags/调试工具/">调试工具</a><small>1</small></li>
+  
+  </ul>
+</div>
+
+</aside>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div class="alignleft">
+  
+  &copy; 2016 Xue He
+  
+</div>
+<div class="clearfix"></div></footer>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+
+<script type="text/javascript">
+var disqus_shortname = 'hexohexue';
+
+(function(){
+  var dsq = document.createElement('script');
+  dsq.type = 'text/javascript';
+  dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+}());
+</script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+</body>
+</html>

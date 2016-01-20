@@ -1,0 +1,331 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>redux心得 | Persimmon Kneader</title>
+  <meta name="author" content="Xue He">
+  
+  <meta name="description" content="技术博客">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="redux心得"/>
+  <meta property="og:site_name" content="Persimmon Kneader"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  <link href="/favicon.png" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="Persimmon Kneader" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  
+<script>
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+	ga('create', 'UA-52998995-1', 'auto');
+	ga('send', 'pageview');
+
+</script>
+
+
+  <script>
+  var _hmt = _hmt || [];
+  (function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?290e001b4a2e8fd868d1eea78cbf6f9f";
+    var s = document.getElementsByTagName("script")[0]; 
+    s.parentNode.insertBefore(hm, s);
+  })();
+  </script>
+</head>
+
+
+<body>
+  <header id="header" class="inner"><div class="alignleft">
+  <h1><a href="/">Persimmon Kneader</a></h1>
+  <h2><a href="/">Front-End Developer</a></h2>
+</div>
+<nav id="main-nav" class="alignright">
+  <ul>
+    
+      <li><a href="//">Home</a></li>
+    
+      <li><a href="//archives">Archives</a></li>
+    
+      <li><a href="//aboutme">About Me</a></li>
+    
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+<div class="clearfix"></div>
+</header>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper"><article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2015-11-18T16:30:33.000Z"><a href="/2015/11/19/redux心得/">2015-11-19</a></time>
+      
+      
+  
+    <h1 class="title">redux心得</h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <h2 id="redux_u4ECB_u7ECD"><a href="#redux_u4ECB_u7ECD" class="headerlink" title="redux介绍"></a>redux介绍</h2><p>redux是flux的一种实现方案,相较于flux,更加清晰易用,它可以实现日志打印,热加载,同构应用,录制回放..</p>
+<ul>
+<li><a href="https://github.com/happypoulp/redux-tutorial" target="_blank" rel="external">https://github.com/happypoulp/redux-tutorial</a> 非常清晰的教程,但是说的不深入,速成上手用</li>
+<li><a href="http://camsong.github.io/redux-in-chinese/" target="_blank" rel="external">http://camsong.github.io/redux-in-chinese/</a> 官方文档的中文版</li>
+<li><a href="http://rackt.github.io/redux/" target="_blank" rel="external">http://rackt.github.io/redux/</a> 官方文档的英文原版</li>
+<li><a href="https://github.com/xgrommx/awesome-redux" target="_blank" rel="external">https://github.com/xgrommx/awesome-redux</a> 各种redux相关网站的收录</li>
+</ul>
+<p>本文接下来说提到的一些词汇(state,action,reducer,action creator,dispatch,store,middleware)可以通过下面找到解释:</p>
+<ul>
+<li>中文:<a href="http://camsong.github.io/redux-in-chinese/docs/Glossary.html" target="_blank" rel="external">http://camsong.github.io/redux-in-chinese/docs/Glossary.html</a></li>
+<li>英文:<a href="http://rackt.org/redux/docs/Glossary.html" target="_blank" rel="external">http://rackt.org/redux/docs/Glossary.html</a></li>
+</ul>
+<h3 id="flux"><a href="#flux" class="headerlink" title="flux"></a><a href="https://facebook.github.io/flux/" target="_blank" rel="external">flux</a></h3><p>flux也是一种强调单向数据流的架构思想,也可以说是一种模式.它的单向数据流如下图所意:<br><img src="https://facebook.github.io/flux/img/flux-simple-f8-diagram-with-client-action-1300w.png" alt=""><br>在他之后的有redux,reflux…这些都是借鉴了flux的思想,细看他们的思想和架构大体上都是相似的.</p>
+<h4 id="u4E0Eredux_u7684_u533A_u522B_u4E00"><a href="#u4E0Eredux_u7684_u533A_u522B_u4E00" class="headerlink" title="与redux的区别一"></a>与redux的区别一</h4><p>flux的dispatch是在action中直接调用的</p>
+<figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> TodoActions = &#123;</span><br><span class="line">  create: <span class="function"><span class="keyword">function</span><span class="params">(text)</span> </span>&#123;</span><br><span class="line">    AppDispatcher.dispatch(&#123;</span><br><span class="line">      actionType: <span class="string">'TODO_CREATE'</span>,</span><br><span class="line">      text: text</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;,</span><br><span class="line"> &#125;;</span><br><span class="line">TodoActions.create(<span class="string">'test'</span>);</span><br></pre></td></tr></table></figure>
+<p>而redux的action,实际上是action creator,把action creator和store的dispatch绑定起来后，直接调用action creator的产物会被直接dispatch出来。</p>
+<a id="more"></a>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">addTodo</span><span class="params">(text)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> &#123; type: ADD_TODO, text &#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">store.addTodo(<span class="string">'test'</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">//这是redux源码中的绑定的代码。</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">bindActionCreator</span><span class="params">(actionCreator, dispatch)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> (...args) =&gt; dispatch(actionCreator(...args));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>所以说，在redux中，是没有flux的dispatcher的。在没有了dispatcher这个东东之后，明显架构的复杂性又降低了很多。</p>
+<h4 id="u4E0Eredux_u7684_u533A_u522B_u4E8C"><a href="#u4E0Eredux_u7684_u533A_u522B_u4E8C" class="headerlink" title="与redux的区别二"></a>与redux的区别二</h4><p>redux和flux的另一个重要的区别就是。redux对store的更新，每次一次更新都是一个新的对象，而flux的更新是修改旧的对象：</p>
+<figure class="highlight pf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">//flux</span><br><span class="line">function create(text) &#123;</span><br><span class="line">  var id = +new Date();</span><br><span class="line">  _todos[id] = &#123;//这个_todo就是store</span><br><span class="line">    id: id,</span><br><span class="line">    complete: false,</span><br><span class="line">    text: text</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br><span class="line">//redux</span><br><span class="line">function todos(<span class="keyword">state</span> = initialState, action) &#123;</span><br><span class="line">  switch (action.type) &#123;</span><br><span class="line">    case ADD_TODO:</span><br><span class="line">      return [//返回的就是生成的新的store,显然是个新对象</span><br><span class="line">        &#123;</span><br><span class="line">          id: <span class="keyword">state</span>.reduce((<span class="keyword">max</span>Id, todo) =&gt; Math.<span class="keyword">max</span>(todo.id, <span class="keyword">max</span>Id), -<span class="number">1</span>) + <span class="number">1</span>,</span><br><span class="line">          completed: false,</span><br><span class="line">          text: action.text</span><br><span class="line">        &#125;, </span><br><span class="line">        ...<span class="keyword">state</span>//es6的语法，意思是把老的<span class="keyword">state</span>中的所有元素插入到这个新的数组中。</span><br><span class="line">      ]</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>其他的区别就是细节操作上的区别，其实思路都相似就是实现的具体方式不同罢了。<br>redux比flux更好的一点就是redux已经生成了不错的生态圈了，使用的人渐渐增多并且口碑也都不错，毕竟这是一个flux实现非常不错的架构。</p>
+<h3 id="redux_dev_tool"><a href="#redux_dev_tool" class="headerlink" title="redux dev tool"></a><a href="https://github.com/gaearon/redux-devtools" target="_blank" rel="external">redux dev tool</a></h3><p>开发redux得力的助手.可以查看当时的state和触发的ation.并且可以任意撤销/前进.<br><img src="https://camo.githubusercontent.com/a0d66cf145fe35cbe5fb341494b04f277d5d85dd/687474703a2f2f692e696d6775722e636f6d2f4a34476557304d2e676966" alt=""><br>安装方法详见官方文档与demo.</p>
+<h3 id="u5355_u5411_u6570_u636E_u6D41"><a href="#u5355_u5411_u6570_u636E_u6D41" class="headerlink" title="单向数据流"></a>单向数据流</h3><p>由于应用的复杂性的提升,不同组件之间state和model的相互影响和数据缓存啊等等东西也会越来越复杂,所以会产生类似于<a href="http://facebook.github.io/flux/docs/overview.html" target="_blank" rel="external"><code>Flux</code></a>这些提供单向数据流的架构.redux和Flux在这点上的思想是一致的.</p>
+<h4 id="store"><a href="#store" class="headerlink" title="store"></a>store</h4><p>所以<code>redux</code>全应用只有一个<code>store</code>,用于存储<code>state</code>,更新<code>state</code>(发起<code>action</code>),以及提供对<code>state</code>的监听.所有的上层组件的状态变化都跟随这一个<code>store</code>.所以数据是从<code>store</code>单向流出的.<br>下面是<code>store</code>的创建过程:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; createStore &#125; <span class="keyword">from</span> <span class="string">'redux'</span>;</span><br><span class="line"><span class="keyword">import</span> todoApp <span class="keyword">from</span> <span class="string">'./reducers'</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> store = createStore(todoApp);</span><br></pre></td></tr></table></figure>
+<p>所有组件,view的状态来自store的<code>state</code>,而用户交互操作,异步请求又如何去更新这个store呢?</p>
+<h4 id="Action"><a href="#Action" class="headerlink" title="Action"></a>Action</h4><p>这里使用了action的方式来触发动作,Action是store生成后唯一的数据来源,只能通过action来改变store的状态.通过<code>store.dispatch()</code>把 action 传到 store。<br>action是这样的东西:</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="rules">&#123;</span><br><span class="line">  <span class="rule"><span class="attribute">type</span>:<span class="value"> <span class="string">'ADD_TODO'</span>,</span><br><span class="line">  text: <span class="string">'Build my first Redux app'</span></span><br><span class="line"></span></span></span>&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="reducer"><a href="#reducer" class="headerlink" title="reducer"></a>reducer</h4><p><code>store.dispatch(action)</code>后store会把这个action交给reducer去处理.reducer就是专门针对不同的action,进行不同的数据处理,最后返回出来对象就是新的state,如果state有变化,这个返回的结果就必须是个新对象,而不是在原来的state上进行的修改.</p>
+<figure class="highlight pf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">function todos(<span class="keyword">state</span> = [], action) &#123;</span><br><span class="line">  switch (action.type) &#123;</span><br><span class="line">  case ADD_TODO:</span><br><span class="line">    return [...<span class="keyword">state</span>, &#123;</span><br><span class="line">      text: action.text,</span><br><span class="line">      completed: false</span><br><span class="line">    &#125;];</span><br><span class="line">  case COMPLETE_TODO:</span><br><span class="line">    return [</span><br><span class="line">      ...<span class="keyword">state</span>.slice(<span class="number">0</span>, action.index),</span><br><span class="line">      Object.assign(&#123;&#125;, <span class="keyword">state</span>[action.index], &#123;</span><br><span class="line">        completed: true</span><br><span class="line">      &#125;),</span><br><span class="line">      ...<span class="keyword">state</span>.slice(action.index + <span class="number">1</span>)</span><br><span class="line">    ];</span><br><span class="line">  <span class="keyword">default</span>:</span><br><span class="line">    return <span class="keyword">state</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>reducer还负责store状态的初始化,store在创建的时候reducer会执行一遍,而且是不带action参数的,此时返回的state即时初始化后的状态.</p>
+<p>reducer进行了数据处理后,改变了store的状态.导致view,组件重新收到了新的props,于是就会产生view上的变化.这就是redux的单向数据流.</p>
+<p>这是官方的todolist的<a href="http://rackt.org/redux/docs/basics/ExampleTodoList.html" target="_blank" rel="external">demo</a></p>
+<h2 id="u7EC4_u4EF6_u62BD_u79BB"><a href="#u7EC4_u4EF6_u62BD_u79BB" class="headerlink" title="组件抽离"></a>组件抽离</h2><p>让<code>view</code>使用<code>redux</code>而让<code>component</code>独立于<code>redux</code>存在,从而让<code>component</code>可以被抽离.</p>
+<p>方法是:让<code>component</code>尽量只读取<code>props</code>来渲染,不要去依赖组件自己的<code>state</code>.让<code>view</code>调用<code>action</code>,并且直接读取<code>store</code>的数据.因此,<a href="http://camsong.github.io/redux-in-chinese/docs/api/bindActionCreators.html" target="_blank" rel="external"><code>connect</code></a>最好只应该存放在<code>view</code>上</p>
+<h2 id="u5F02_u6B65_u6570_u636E_u6D41_u4EE5_u53CAmiddleware"><a href="#u5F02_u6B65_u6570_u636E_u6D41_u4EE5_u53CAmiddleware" class="headerlink" title="异步数据流以及middleware"></a>异步数据流以及middleware</h2><p>对于一开始接触redux的异步需求,不知该如何下手.下面一顿凌乱的异步取数据的思考….<br>&gt;<br>如果我希望有个用来获取数据的名叫<code>getData</code>的<code>action</code>,我触发了这个<code>action</code>之后,需要再触发一个<code>ajax</code>请求,在<code>ajax</code>请求结束之后再触发一个拿到数据<code>gotData</code>的<code>action</code>.嗯.思路很好….于是,我写一个<code>getData</code> 的 <code>actioncreator</code>,但是返回什么<code>action</code>呢,<code>reducer</code>拿到这个<code>action</code>后,还没有拿到目标数据,并不能对<code>store</code>进行任何修改,这个<code>reducer</code>没有任何意义.先不管…那我要在触发<code>getData</code>这个<code>action</code>的过程中顺便发出<code>ajax</code>请求,然后在回调函数中再<code>dispatch</code>一个<code>gotData</code>的<code>action</code>.但是作用域中的<code>dispatch</code>哪来呢,<code>action</code>中的作用域并没有<code>dispatch</code>…..<br>&gt;</p>
+<p>再看官方介绍的异步<a href="http://camsong.github.io/redux-in-chinese/docs/advanced/ExampleRedditAPI.html" target="_blank" rel="external">demo</a>,按照官方介绍的方式成功解决了问题,细看官方文档和源码,突然间就顺便懂了<a href="http://camsong.github.io/redux-in-chinese/docs/api/applyMiddleware.html" target="_blank" rel="external"><code>middleware</code></a>是个什么的东西.</p>
+<p>一些异步的操作是没办法通过<code>actionCreator</code>直接返回<code>action</code>的.所以在<code>redux</code>中可以通过<code>Middleware</code>来实现异步的<code>action</code>.它可以在<strong><code>ACTION</code>发起之后,到达<code>reducer</code>之前</strong>进行他的操作. </p>
+<h3 id="redux-thunk"><a href="#redux-thunk" class="headerlink" title="redux-thunk"></a>redux-thunk</h3><p>官方用于异步<code>action</code>的<code>redux-thunk</code>就作用在<code>action creator</code>生产了一个匿名函数被<code>dispatch</code>之前的时候:</p>
+<figure class="highlight openscad"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//Action Creator</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">addTodo</span><span class="params">(text)</span> &#123;</span></span><br><span class="line">  return &#123;</span><br><span class="line">    type: ADD_TODO,</span><br><span class="line">    <span class="built_in">text</span></span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//被dispatch</span></span><br><span class="line">store.dispatch(addTodo(<span class="built_in">text</span>));</span><br></pre></td></tr></table></figure>
+<p>观察源码得知,<code>dispatch</code>是创建<code>Store</code>(即<code>createStore</code>的时候),store暴露出来的一个方法.只能从创建好的<code>store</code>中获得,是<code>store</code>的一个方法.它的作用是拿取<code>Action</code>对象(不可以是别的类型),把当前的<code>state</code>和<code>Action</code>一起交给<code>reducer</code>来处理.这个过程是同步的.</p>
+<p>这样的话,要让<code>action</code>真正地被<code>dispath</code>之前,被拦截下来.于是,<code>middleware</code>就有用了,顺便能理解一下它到底是干嘛用的.</p>
+<p><strong><code>middleware</code>通过给<code>dispatch</code>包装了一层</strong>,使得<code>dispatch</code>可以接受匿名函数作为参数.<code>redux-thunk</code>就是用来干这个的<code>middleware</code>:</p>
+<p>当<code>dispatch</code>接收到了<code>actionCreator</code>创建的东西后,如果得知它是个匿名函数,则会把<code>dispatch</code>和<code>state</code>一起作为参数把这个<code>function</code>给调用了,而不会触发原来的<code>dispatch</code>了.有了<code>dispatch</code>在作用域之后匿名函数的就能想怎么<code>dispatch</code>就怎么<code>dispatch</code>了!</p>
+<p>所以最终的结果就是.如果<code>action creator</code>返回了一个匿名函数就会直接执行它并且是自带<code>(dispatch,state)</code>参数的!</p>
+<p>这是官方异步数据流的<a href="http://rackt.org/redux/docs/advanced/ExampleRedditAPI.html" target="_blank" rel="external">demo</a></p>
+<h2 id="u4F7F_u7528_u611F_u53D7"><a href="#u4F7F_u7528_u611F_u53D7" class="headerlink" title="使用感受"></a>使用感受</h2><h3 id="u597D_u5904"><a href="#u597D_u5904" class="headerlink" title="好处"></a>好处</h3><ul>
+<li>只有view这些页面级别的组件需要使用redux,关注业务逻辑,其他的组件都能够脱离redux独立使用,非常适合迁移.</li>
+<li>用redux进行的业务数据的处理会让逻辑非常得非常得非常得清晰!!!!!</li>
+<li>redux的生态圈还都不错.</li>
+</ul>
+<h3 id="u62B1_u6028"><a href="#u62B1_u6028" class="headerlink" title="抱怨"></a>抱怨</h3><ul>
+<li>写action花费的时间很多,普通的一个异步请求只要发请求-&gt;回调-&gt;重新渲染模板就能完成.而redux需要.定义action-&gt;写触发请求的action的代码-&gt;写发请求的actioncreator-&gt;写拿到数据的actioncreator-&gt;写处理这个两个action的reducer</li>
+</ul>
+
+      
+    </div>
+    <footer>
+      
+        
+  
+  <div class="categories">
+    <a href="/categories/redux/">redux</a>
+  </div>
+
+        
+  
+  <div class="tags">
+    <a href="/tags/react/">react</a>, <a href="/tags/redux/">redux</a>
+  </div>
+
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+<section id="comment">
+  <h1 class="title">留言</h1>
+
+  
+  <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+  
+</section>
+
+</div></div>
+    <aside id="sidebar" class="alignright">
+  <div class="search">
+  <form action="//google.com/search" method="get" accept-charset="utf-8">
+    <input type="search" name="q" results="0" placeholder="搜索">
+    <input type="hidden" name="q" value="site:yukihe.com">
+  </form>
+</div>
+
+  
+<div class="widget tag">
+  <h3 class="title">分类</h3>
+  <ul class="entry">
+  
+    <li><a href="/categories/ExtJs/">ExtJs</a><small>1</small></li>
+  
+    <li><a href="/categories/css/">css</a><small>5</small></li>
+  
+    <li><a href="/categories/markdown/">markdown</a><small>1</small></li>
+  
+    <li><a href="/categories/redux/">redux</a><small>1</small></li>
+  
+    <li><a href="/categories/sencha-touch/">sencha touch</a><small>3</small></li>
+  
+    <li><a href="/categories/图片压缩/">图片压缩</a><small>1</small></li>
+  
+    <li><a href="/categories/工具/">工具</a><small>3</small></li>
+  
+    <li><a href="/categories/性能优化/">性能优化</a><small>1</small></li>
+  
+    <li><a href="/categories/爬虫/">爬虫</a><small>1</small></li>
+  
+    <li><a href="/categories/自动化文档/">自动化文档</a><small>1</small></li>
+  
+  </ul>
+</div>
+
+
+  
+<div class="widget tag">
+  <h3 class="title">标签</h3>
+  <ul class="entry">
+  
+    <li><a href="/tags/alfred/">alfred</a><small>1</small></li>
+  
+    <li><a href="/tags/browsersync/">browsersync</a><small>1</small></li>
+  
+    <li><a href="/tags/css/">css</a><small>2</small></li>
+  
+    <li><a href="/tags/css3/">css3</a><small>4</small></li>
+  
+    <li><a href="/tags/gradient/">gradient</a><small>1</small></li>
+  
+    <li><a href="/tags/hexo/">hexo</a><small>1</small></li>
+  
+    <li><a href="/tags/markdown/">markdown</a><small>1</small></li>
+  
+    <li><a href="/tags/phantomJS/">phantomJS</a><small>1</small></li>
+  
+    <li><a href="/tags/phantomJs/">phantomJs</a><small>1</small></li>
+  
+    <li><a href="/tags/proxy/">proxy</a><small>1</small></li>
+  
+    <li><a href="/tags/react/">react</a><small>1</small></li>
+  
+    <li><a href="/tags/redux/">redux</a><small>1</small></li>
+  
+    <li><a href="/tags/restful/">restful</a><small>1</small></li>
+  
+    <li><a href="/tags/sencha-touch/">sencha touch</a><small>2</small></li>
+  
+    <li><a href="/tags/sencha-touch/">sencha-touch</a><small>2</small></li>
+  
+    <li><a href="/tags/store/">store</a><small>1</small></li>
+  
+    <li><a href="/tags/sublime/">sublime</a><small>1</small></li>
+  
+    <li><a href="/tags/webp/">webp</a><small>1</small></li>
+  
+    <li><a href="/tags/websql/">websql</a><small>1</small></li>
+  
+    <li><a href="/tags/优化/">优化</a><small>2</small></li>
+  
+    <li><a href="/tags/兼容性/">兼容性</a><small>1</small></li>
+  
+    <li><a href="/tags/动画/">动画</a><small>1</small></li>
+  
+    <li><a href="/tags/图片压缩/">图片压缩</a><small>1</small></li>
+  
+    <li><a href="/tags/委托/">委托</a><small>1</small></li>
+  
+    <li><a href="/tags/导航/">导航</a><small>1</small></li>
+  
+    <li><a href="/tags/性能/">性能</a><small>1</small></li>
+  
+    <li><a href="/tags/性能优化/">性能优化</a><small>1</small></li>
+  
+    <li><a href="/tags/手势/">手势</a><small>1</small></li>
+  
+    <li><a href="/tags/注释/">注释</a><small>1</small></li>
+  
+    <li><a href="/tags/测试/">测试</a><small>1</small></li>
+  
+    <li><a href="/tags/渲染/">渲染</a><small>1</small></li>
+  
+    <li><a href="/tags/爬虫/">爬虫</a><small>1</small></li>
+  
+    <li><a href="/tags/翻译/">翻译</a><small>1</small></li>
+  
+    <li><a href="/tags/自动化文档/">自动化文档</a><small>1</small></li>
+  
+    <li><a href="/tags/触摸/">触摸</a><small>1</small></li>
+  
+    <li><a href="/tags/调试工具/">调试工具</a><small>1</small></li>
+  
+  </ul>
+</div>
+
+</aside>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div class="alignleft">
+  
+  &copy; 2016 Xue He
+  
+</div>
+<div class="clearfix"></div></footer>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+
+<script type="text/javascript">
+var disqus_shortname = 'hexohexue';
+
+(function(){
+  var dsq = document.createElement('script');
+  dsq.type = 'text/javascript';
+  dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+}());
+</script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+</body>
+</html>

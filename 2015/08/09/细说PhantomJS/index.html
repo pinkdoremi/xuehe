@@ -1,0 +1,338 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>细说PhantomJS | Persimmon Kneader</title>
+  <meta name="author" content="Xue He">
+  
+  <meta name="description" content="技术博客">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="细说PhantomJS"/>
+  <meta property="og:site_name" content="Persimmon Kneader"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  <link href="/favicon.png" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="Persimmon Kneader" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  
+<script>
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+	ga('create', 'UA-52998995-1', 'auto');
+	ga('send', 'pageview');
+
+</script>
+
+
+  <script>
+  var _hmt = _hmt || [];
+  (function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?290e001b4a2e8fd868d1eea78cbf6f9f";
+    var s = document.getElementsByTagName("script")[0]; 
+    s.parentNode.insertBefore(hm, s);
+  })();
+  </script>
+</head>
+
+
+<body>
+  <header id="header" class="inner"><div class="alignleft">
+  <h1><a href="/">Persimmon Kneader</a></h1>
+  <h2><a href="/">Front-End Developer</a></h2>
+</div>
+<nav id="main-nav" class="alignright">
+  <ul>
+    
+      <li><a href="//">Home</a></li>
+    
+      <li><a href="//archives">Archives</a></li>
+    
+      <li><a href="//aboutme">About Me</a></li>
+    
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+<div class="clearfix"></div>
+</header>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper"><article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2015-08-09T15:43:01.000Z"><a href="/2015/08/09/细说PhantomJS/">2015-08-09</a></time>
+      
+      
+  
+    <h1 class="title">细说PhantomJS</h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <h2 id="PhantomJs_u662F_u4EC0_u4E48_uFF1F"><a href="#PhantomJs_u662F_u4EC0_u4E48_uFF1F" class="headerlink" title="PhantomJs是什么？"></a><a href="http://phantomjs.org/" target="_blank" rel="external">PhantomJs</a>是什么？</h2><p>Phantom JS是一个服务器端的 JavaScript API 的 WebKit。支持各种Web标准： DOM 处理, CSS 选择器, JSON, Canvas, 和 SVG。</p>
+<h2 id="PhantomJs_u5E72_u4EC0_u4E48_uFF1F"><a href="#PhantomJs_u5E72_u4EC0_u4E48_uFF1F" class="headerlink" title="PhantomJs干什么？"></a><a href="http://phantomjs.org/" target="_blank" rel="external">PhantomJs</a>干什么？</h2><p>它可以用来模拟浏览器环境，实现不开浏览器隔空跑基于页面环境上的脚本。</p>
+<h3 id="u4F7F_u7528_u65B9_u5F0F"><a href="#u4F7F_u7528_u65B9_u5F0F" class="headerlink" title="使用方式"></a>使用方式</h3><p>用phantomJs 写一个脚本，然后在命令行运行</p>
+<h3 id="u5177_u4F53_u7684_u529F_u80FD_u70B9_uFF1A"><a href="#u5177_u4F53_u7684_u529F_u80FD_u70B9_uFF1A" class="headerlink" title="具体的功能点："></a>具体的功能点：</h3><h4 id="u622A_u5C4F"><a href="#u622A_u5C4F" class="headerlink" title="截屏"></a><a href="http://phantomjs.org/screen-capture.html" target="_blank" rel="external">截屏</a></h4><p>因为phantomJs使用了webkit的内核，自带布局和渲染，所以是可以截屏的。如下：截图github。</p>
+<pre><code>var page = require(&apos;webpage&apos;).create();
+page.open(&apos;http://github.com/&apos;, function() {
+    page.render(&apos;github.png&apos;);
+    phantom.exit();
+});
+</code></pre><h4 id="u7F51_u7EDC_u76D1_u63A7"><a href="#u7F51_u7EDC_u76D1_u63A7" class="headerlink" title="网络监控"></a><a href="http://phantomjs.org/network-monitoring.html" target="_blank" rel="external">网络监控</a></h4><a id="more"></a>
+<p>phantomjs对于任何的请求和返回都能捕捉到，我们可以对其进行分析，篡改。</p>
+<pre><code>var page = require(&apos;webpage&apos;).create();
+page.onResourceRequested = function(request) {
+    console.log(&apos;Request &apos; + JSON.stringify(request, undefined, 4));
+};
+page.onResourceReceived = function(response) {
+    console.log(&apos;Receive &apos; + JSON.stringify(response, undefined, 4));
+};
+page.open(url);
+</code></pre><p>可以用YSlow这种性能检测工具与它<a href="http://yslow.org/phantomjs/" target="_blank" rel="external">结合在一起</a>，接入持续集成系统。</p>
+<h4 id="u9875_u9762_u81EA_u52A8_u5316"><a href="#u9875_u9762_u81EA_u52A8_u5316" class="headerlink" title="页面自动化"></a><a href="http://phantomjs.org/page-automation.html" target="_blank" rel="external">页面自动化</a></h4><p>其实就是进行js操作，可以操作dom，css这些，可以自定义userAgent。拥有这些功能就能当脚本跑了。</p>
+<pre><code>var page = require(&apos;webpage&apos;).create();
+console.log(&apos;The default user agent is &apos; + page.settings.userAgent);
+page.settings.userAgent = &apos;SpecialAgent&apos;;
+page.open(&apos;http://www.httpuseragent.org&apos;, function(status) {
+  if (status !== &apos;success&apos;) {
+    console.log(&apos;Unable to access network&apos;);
+  } else {
+    var ua = page.evaluate(function() {
+      return document.getElementById(&apos;myagent&apos;).textContent;
+      });
+      console.log(ua);
+  }
+  phantom.exit();
+});
+</code></pre><p>此外，它还能引入别的脚本。比如引入JQuery操作DOM</p>
+<pre><code>var page = require(&apos;webpage&apos;).create();
+page.open(&apos;http://www.sample.com&apos;, function() {
+  page.includeJs(&quot;http://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js&quot;, function() {
+    page.evaluate(function() {
+      $(&quot;button&quot;).click();
+    });
+    phantom.exit()
+  });
+});
+</code></pre><h4 id="u5176_u4ED6API"><a href="#u5176_u4ED6API" class="headerlink" title="其他API"></a>其他API</h4><h4 id="23_fileSystem"><a href="#23_fileSystem" class="headerlink" title="# fileSystem"></a># <a href="http://phantomjs.org/api/fs/method/absolute.html" target="_blank" rel="external">fileSystem</a></h4><p>支持文件操作。</p>
+<pre><code>var fs = require(&apos;fs&apos;);
+</code></pre><h4 id="23_child_process"><a href="#23_child_process" class="headerlink" title="# child_process"></a># <a href="http://phantomjs.org/api/child_process/" target="_blank" rel="external">child_process</a></h4><p>这点也类似node中的，可以执行命令行操作。</p>
+<h5 id="system"><a href="#system" class="headerlink" title="system"></a><a href="http://phantomjs.org/api/system/" target="_blank" rel="external">system</a></h5><p>获取变量，环境变量，以及一些系统信息。</p>
+<h5 id="webserver"><a href="#webserver" class="headerlink" title="webserver"></a><a href="http://phantomjs.org/api/webserver/" target="_blank" rel="external">webserver</a></h5><p>支持开启服务器，监听，关闭。</p>
+<h3 id="u5B9E_u9645_u8FD0_u7528_uFF1A"><a href="#u5B9E_u9645_u8FD0_u7528_uFF1A" class="headerlink" title="实际运用："></a>实际运用：</h3><h4 id="u6D4B_u8BD5"><a href="#u6D4B_u8BD5" class="headerlink" title="测试"></a>测试</h4><p>phantomjs本身不是测试框架，它可以结合测试框架进行测试。让一些js测试框架，除了能测试js代码，还能够模拟浏览器交互，测试输出。<br>官网有目前测试框架中已经结合了phantomjs的<a href="http://phantomjs.org/headless-testing.html" target="_blank" rel="external">列表</a></p>
+<p>我们可以实现，模拟交互，验证输出等操作。实现BDD，或者持续集成系统中的测试环节。</p>
+<h4 id="u722C_u866B"><a href="#u722C_u866B" class="headerlink" title="爬虫"></a>爬虫</h4><p>比如说抓取网站信息到本地生成一个文件，或者爬数据等各种爬虫脚本都可以写。参见<a href="http://yukihe.com/2015/07/02/%E5%88%A9%E7%94%A8phantomJs%E5%88%B6%E4%BD%9C%E7%9A%84%E7%88%AC%E8%82%A1%E7%A5%A8%E8%84%9A%E6%9C%AC/">利用phantomJs制作的爬股票脚本</a></p>
+<h3 id="u76F8_u4F3C_u5DE5_u5177"><a href="#u76F8_u4F3C_u5DE5_u5177" class="headerlink" title="相似工具"></a>相似工具</h3><h4 id="SlimerJS"><a href="#SlimerJS" class="headerlink" title="SlimerJS"></a><a href="http://slimerjs.org/" target="_blank" rel="external">SlimerJS</a></h4><p>和PhantomJS的各方面功能都差不多。细看文档非常相似。但是他是基于Gecko的。</p>
+<h4 id="trifleJS"><a href="#trifleJS" class="headerlink" title="trifleJS"></a><a href="http://triflejs.org/" target="_blank" rel="external">trifleJS</a></h4><p>同上之ie版。</p>
+<h3 id="u884D_u751F_u5DE5_u5177"><a href="#u884D_u751F_u5DE5_u5177" class="headerlink" title="衍生工具"></a>衍生工具</h3><h4 id="phantomCSS"><a href="#phantomCSS" class="headerlink" title="phantomCSS"></a><a href="https://github.com/Huddle/PhantomCSS" target="_blank" rel="external">phantomCSS</a></h4><p>界面测试工具。是使用的像素对比的方式。像素对比使用了<a href="http://huddle.github.io/Resemble.js/" target="_blank" rel="external">Resemble.js</a></p>
+<h4 id="BackstopJS"><a href="#BackstopJS" class="headerlink" title="BackstopJS"></a><a href="http://garris.github.io/BackstopJS/" target="_blank" rel="external">BackstopJS</a></h4><p>响应式界面的像素对比。像素对比使用了<a href="http://huddle.github.io/Resemble.js/" target="_blank" rel="external">Resemble.js</a></p>
+<h4 id="casperjs"><a href="#casperjs" class="headerlink" title="casperjs"></a><a href="http://casperjs.readthedocs.org/en/latest/" target="_blank" rel="external">casperjs</a></h4><p>PhantomJS和SlimerJS的合体加强版</p>
+<h4 id="phantomas"><a href="#phantomas" class="headerlink" title="phantomas"></a><a href="https://github.com/macbre/phantomas" target="_blank" rel="external">phantomas</a></h4><p>基于phantomJS的性能测试工具。他能测试页面加载时间、页面请求数、资源大小、是否开启缓存和Gzip、选择器性能、dom结构等性能指标。</p>
+<h2 id="u53C2_u8003"><a href="#u53C2_u8003" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a href="http://fex.baidu.com/blog/2015/07/front-end-test/" target="_blank" rel="external">前端自动化测试探索</a></li>
+</ul>
+
+      
+    </div>
+    <footer>
+      
+        
+  
+  <div class="categories">
+    <a href="/categories/工具/">工具</a>
+  </div>
+
+        
+  
+  <div class="tags">
+    <a href="/tags/phantomJS/">phantomJS</a>, <a href="/tags/测试/">测试</a>, <a href="/tags/爬虫/">爬虫</a>
+  </div>
+
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+<section id="comment">
+  <h1 class="title">留言</h1>
+
+  
+  <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+  
+</section>
+
+</div></div>
+    <aside id="sidebar" class="alignright">
+  <div class="search">
+  <form action="//google.com/search" method="get" accept-charset="utf-8">
+    <input type="search" name="q" results="0" placeholder="搜索">
+    <input type="hidden" name="q" value="site:yukihe.com">
+  </form>
+</div>
+
+  
+<div class="widget tag">
+  <h3 class="title">分类</h3>
+  <ul class="entry">
+  
+    <li><a href="/categories/ExtJs/">ExtJs</a><small>1</small></li>
+  
+    <li><a href="/categories/css/">css</a><small>5</small></li>
+  
+    <li><a href="/categories/markdown/">markdown</a><small>1</small></li>
+  
+    <li><a href="/categories/redux/">redux</a><small>1</small></li>
+  
+    <li><a href="/categories/sencha-touch/">sencha touch</a><small>3</small></li>
+  
+    <li><a href="/categories/图片压缩/">图片压缩</a><small>1</small></li>
+  
+    <li><a href="/categories/工具/">工具</a><small>3</small></li>
+  
+    <li><a href="/categories/性能优化/">性能优化</a><small>1</small></li>
+  
+    <li><a href="/categories/爬虫/">爬虫</a><small>1</small></li>
+  
+    <li><a href="/categories/自动化文档/">自动化文档</a><small>1</small></li>
+  
+  </ul>
+</div>
+
+
+  
+<div class="widget tag">
+  <h3 class="title">标签</h3>
+  <ul class="entry">
+  
+    <li><a href="/tags/alfred/">alfred</a><small>1</small></li>
+  
+    <li><a href="/tags/browsersync/">browsersync</a><small>1</small></li>
+  
+    <li><a href="/tags/css/">css</a><small>2</small></li>
+  
+    <li><a href="/tags/css3/">css3</a><small>4</small></li>
+  
+    <li><a href="/tags/gradient/">gradient</a><small>1</small></li>
+  
+    <li><a href="/tags/hexo/">hexo</a><small>1</small></li>
+  
+    <li><a href="/tags/markdown/">markdown</a><small>1</small></li>
+  
+    <li><a href="/tags/phantomJS/">phantomJS</a><small>1</small></li>
+  
+    <li><a href="/tags/phantomJs/">phantomJs</a><small>1</small></li>
+  
+    <li><a href="/tags/proxy/">proxy</a><small>1</small></li>
+  
+    <li><a href="/tags/react/">react</a><small>1</small></li>
+  
+    <li><a href="/tags/redux/">redux</a><small>1</small></li>
+  
+    <li><a href="/tags/restful/">restful</a><small>1</small></li>
+  
+    <li><a href="/tags/sencha-touch/">sencha touch</a><small>2</small></li>
+  
+    <li><a href="/tags/sencha-touch/">sencha-touch</a><small>2</small></li>
+  
+    <li><a href="/tags/store/">store</a><small>1</small></li>
+  
+    <li><a href="/tags/sublime/">sublime</a><small>1</small></li>
+  
+    <li><a href="/tags/webp/">webp</a><small>1</small></li>
+  
+    <li><a href="/tags/websql/">websql</a><small>1</small></li>
+  
+    <li><a href="/tags/优化/">优化</a><small>2</small></li>
+  
+    <li><a href="/tags/兼容性/">兼容性</a><small>1</small></li>
+  
+    <li><a href="/tags/动画/">动画</a><small>1</small></li>
+  
+    <li><a href="/tags/图片压缩/">图片压缩</a><small>1</small></li>
+  
+    <li><a href="/tags/委托/">委托</a><small>1</small></li>
+  
+    <li><a href="/tags/导航/">导航</a><small>1</small></li>
+  
+    <li><a href="/tags/性能/">性能</a><small>1</small></li>
+  
+    <li><a href="/tags/性能优化/">性能优化</a><small>1</small></li>
+  
+    <li><a href="/tags/手势/">手势</a><small>1</small></li>
+  
+    <li><a href="/tags/注释/">注释</a><small>1</small></li>
+  
+    <li><a href="/tags/测试/">测试</a><small>1</small></li>
+  
+    <li><a href="/tags/渲染/">渲染</a><small>1</small></li>
+  
+    <li><a href="/tags/爬虫/">爬虫</a><small>1</small></li>
+  
+    <li><a href="/tags/翻译/">翻译</a><small>1</small></li>
+  
+    <li><a href="/tags/自动化文档/">自动化文档</a><small>1</small></li>
+  
+    <li><a href="/tags/触摸/">触摸</a><small>1</small></li>
+  
+    <li><a href="/tags/调试工具/">调试工具</a><small>1</small></li>
+  
+  </ul>
+</div>
+
+</aside>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div class="alignleft">
+  
+  &copy; 2016 Xue He
+  
+</div>
+<div class="clearfix"></div></footer>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+
+<script type="text/javascript">
+var disqus_shortname = 'hexohexue';
+
+(function(){
+  var dsq = document.createElement('script');
+  dsq.type = 'text/javascript';
+  dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+}());
+</script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+</body>
+</html>

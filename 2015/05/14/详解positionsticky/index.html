@@ -1,0 +1,299 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>详解position:sticky | Persimmon Kneader</title>
+  <meta name="author" content="Xue He">
+  
+  <meta name="description" content="技术博客">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="详解position:sticky"/>
+  <meta property="og:site_name" content="Persimmon Kneader"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  <link href="/favicon.png" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="Persimmon Kneader" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  
+<script>
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+	ga('create', 'UA-52998995-1', 'auto');
+	ga('send', 'pageview');
+
+</script>
+
+
+  <script>
+  var _hmt = _hmt || [];
+  (function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?290e001b4a2e8fd868d1eea78cbf6f9f";
+    var s = document.getElementsByTagName("script")[0]; 
+    s.parentNode.insertBefore(hm, s);
+  })();
+  </script>
+</head>
+
+
+<body>
+  <header id="header" class="inner"><div class="alignleft">
+  <h1><a href="/">Persimmon Kneader</a></h1>
+  <h2><a href="/">Front-End Developer</a></h2>
+</div>
+<nav id="main-nav" class="alignright">
+  <ul>
+    
+      <li><a href="//">Home</a></li>
+    
+      <li><a href="//archives">Archives</a></li>
+    
+      <li><a href="//aboutme">About Me</a></li>
+    
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+<div class="clearfix"></div>
+</header>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper"><article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2015-05-14T13:12:16.000Z"><a href="/2015/05/14/详解positionsticky/">2015-05-14</a></time>
+      
+      
+  
+    <h1 class="title">详解position:sticky</h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>做过移动端的人应该都知道，在iOS 和 部分安卓机上，手指触摸有时会阻塞javascript，导致有时摁住屏幕，页面就会一动不动。比如说摁住屏幕，倒计时停止。<br>如果有这么一个需求：有一个导航栏，是在页面中间位置的，当页面往下滑动超过导航栏的时候，导航栏滑到顶部的时候需要置顶，在页面重新划回去的时候，导航栏又回到自己的位置上，整个过程导航栏的位置的变化应该是连贯的。<br><a id="more"></a><br>如下面这个场景：<br><img src="/img/sticky1.PNG" alt="一张图" title="一开始是这样的"><br><img src="/img/sticky2.PNG" alt="另一张图" title="滑下来后是这样的"><br>但是因为可怕的iOS中和Android中的滚动事件，导致了会出现事件的阻止，导致:卡！卡！卡！</p>
+<h1 id="u4F46_u662FiOS_u548CAndroid_u4E2D_u4E3A_u4EC0_u4E48_u4E8B_u4EF6_u4F1A_u88AB_u963B_u6B62_u5462"><a href="#u4F46_u662FiOS_u548CAndroid_u4E2D_u4E3A_u4EC0_u4E48_u4E8B_u4EF6_u4F1A_u88AB_u963B_u6B62_u5462" class="headerlink" title="但是iOS和Android中为什么事件会被阻止呢"></a>但是iOS和Android中为什么事件会被阻止呢</h1><p>这就要说到他们一直引以为傲的惯性滚动了。这个是PC上浏览器一般没有的特性。</p>
+<h2 id="u9996_u5148_u6765_u770B_u770Bscroll_u4E8B_u4EF6_u548Ctouchmove_u4E8B_u4EF6_u5728_u79FB_u52A8_u7AEF_u7684_u89E6_u53D1_u673A_u5236"><a href="#u9996_u5148_u6765_u770B_u770Bscroll_u4E8B_u4EF6_u548Ctouchmove_u4E8B_u4EF6_u5728_u79FB_u52A8_u7AEF_u7684_u89E6_u53D1_u673A_u5236" class="headerlink" title="首先来看看scroll事件和touchmove事件在移动端的触发机制"></a>首先来看看scroll事件和touchmove事件在移动端的触发机制</h2><p>在iOS上，滑动过程中的两个事件(scroll&amp;touchmove)是这样触发的：<br>touchstart -&gt; touchmove touchmove touchmove ……. touchmove -&gt; touchend -&gt;开始惯性滚动 -&gt; 滚 滚 滚 … -&gt; 惯性滚动结束 -&gt; scroll<br>也就是说，整个滑动过程中，scroll只触发了一次，实在滑动彻底结束的时候触发的。<br>在Android上，情况就多了，分机型有的和iOS是一样的，有的是这样的：<br>touchstart -&gt; touchmove,scroll touchmove,scroll touchmove,scroll ……. touchmove,scroll -&gt; touchend -&gt;开始惯性滚动 -&gt; 滚,scroll 滚,scroll 滚,scroll … -&gt; 惯性滚动结束 -&gt; scroll<br>第二种情况scroll是在滚动的过程中一直被触发的。<br>所以，从这个方面来看，问题是：<em>很难找到在滑动过程中连贯的事件</em>。</p>
+<h2 id="u662F_u4EC0_u4E48_u963B_u6B62_u4E86_u52A8_u753B"><a href="#u662F_u4EC0_u4E48_u963B_u6B62_u4E86_u52A8_u753B" class="headerlink" title="是什么阻止了动画"></a>是什么阻止了动画</h2><p>但是问题还不仅仅在这里，有这么一个场景：页面有个广告轮播图，一般情况下播的好好的，但是当我手指触摸并且滑了一下让页面有所滚动的时候并且恰巧广告正在切换过程中，广告会立即停止切换，停在半空中，也就是transition停住了。<br><img src="/img/sticky3.PNG" alt="停住了的瞬间抓拍" title="停住了的瞬间抓拍"><br>在松手后，图片又继续<em>滑动</em>回应该滑动到的位置，显然，这个继续滑动，意思是这个事件只是被暂停，再被继续，而不是终止了。<br><em>那为什么transition的动画会被暂停呢？</em><br>这就要谈到进程管理的问题了。<br>我也想知道为什么，一直在搜索相关的答案，也一直找不到结果。(我不断地寻找。。油腻的师姐。。。)别人的说法是：移动端的浏览器的就是这样的，滚动时会暂停渲染的。<br>对此问题我咨询了iOS的开发，讨论结果大概是这样的：在iOS中，webview是一个scrollview，scrollview会有一个scroll事件，因为scrollview的模拟滚动的特性会让触摸滚动进入一种抢占主线程的方式去执行，去计算时刻的速度等模拟滚动需要的东西，所以它会将系统带进一种特殊的ui track的状态。在这个状态中，系统只响应UI事件的回调，比如说touchmove中的回调，并不相应其他的事件类似于setTimeout等，此外，系统还不相应已经执行的animation，因为在webview中的动画并没有直接交给GPU去做动画的计算，而是在webview中计算完成后，在给GPU去绘制的，所以在ios滚动中，动画会停止，倒计时也会停止，图片加载成功后也会停止渲染到页面上。而在touchmove中可以控制left等属性的值，变换页面的元素的位置等。在ios中,scroll事件只有在页面滑动停止的时候才会触发。<br>在android中，我做了实验，结果却因机型而异常。<br>在魅族中，当touchmove触发了scroll后，就没有touchmove事件了，scroll事件还会有，但是也是不是非常连贯出现的，当scroll时，动画停止。<br>在小米2s中，touchmove触发的非常密集，scroll也会有，频率低于touchmove。<br>说明在魅族这类机子中的机制和ios类似，只不过它响应的是scroll。<br>在米2s这类机子中，并不在滑动中暂停任何事件和渲染。<br>为什么要在滑动中暂停这些事件和渲染呢，我个人认为应该是为了更流畅地响应用户的滑动。</p>
+<h2 id="u6ED1_u52A8_u7F6E_u9876_u7684_u5BFC_u822A_u680F"><a href="#u6ED1_u52A8_u7F6E_u9876_u7684_u5BFC_u822A_u680F" class="headerlink" title="滑动置顶的导航栏"></a>滑动置顶的导航栏</h2><p>在这种情况下，滑动置顶的导航栏就不怎么好实现了。<br>利用传统的方法，是监听页面scroll的位置，到一定程度的时候就<code>position:fixed;top:0</code>。<br>为了兼容ios,必须同时监听touchmove事件。但是问题来了，滑动是这么一个过程：<br>touchstart -&gt; touchmove,scroll -&gt; touchmove,scroll -&gt; touchend,scroll -&gt; scroll slower -&gt; scroll end<br>也就是说，在手指离开屏幕到惯性滚动停止期间，是监听不到任何事件的，这段时间中如果需要改变成<code>position:fixed</code>或者<code>position:static</code>页面就不会变化，直到滑动停止才会响应。<br>在魅族中，因为scroll事件不连贯，依然会看起来不是在准确的某个位置变化posotion的属性，会卡卡卡的。</p>
+<h2 id="u65B0_u7684_u89E3_u51B3_u65B9_u6848"><a href="#u65B0_u7684_u89E3_u51B3_u65B9_u6848" class="headerlink" title="新的解决方案"></a>新的解决方案</h2><p>这个妙招目前只有ios兼容，在ios6的系统上有bug，在ios7以上表现优秀。<br>此外，并不确定这个属性是否会被保留。但是目前来说还是很好用的。</p>
+<h3 id="u7279_u6027"><a href="#u7279_u6027" class="headerlink" title="特性"></a>特性</h3><p>它集齐了<code>position:fixed</code>和<code>position:static</code>两者的功能。它自己一个人，就可以创造滑动置顶的导航栏，不需要任何js控制。<br>对于滑动置顶导航栏，只需要:</p>
+<pre><code>position:sticky;
+top:0px;
+</code></pre><p>就能搞定。</p>
+<h2 id="position_3Asticky"><a href="#position_3Asticky" class="headerlink" title="position:sticky"></a>position:sticky</h2><p>sticky的意思是粘性的。<br>具有sticky属性的元素，并且受top值影响的元素，该元素距离屏幕顶部的距离最少为top值的距离。但是，该元素必须在父元素这个框内，也就说说，当父元素被彻底上滑滑出屏幕的时候，该元素会跟着父元素被滑出屏幕。<br>具有sticky属性的元素，并且受bottom值影响的元素，该元素距离屏幕底部的距离最少为bottom值的距离。但是，该元素必须在父元素这个框内，也就说说，当父元素被彻底下滑滑出屏幕的时候，该元素会跟着父元素被滑出屏幕。<br>left,right同样。</p>
+<h3 id="u5B9E_u73B0_u4E00_u4E2A_u5BFC_u822A_u680F_u9876_u8DD1_u53E6_u4E00_u4E2A_u5BFC_u822A_u680F"><a href="#u5B9E_u73B0_u4E00_u4E2A_u5BFC_u822A_u680F_u9876_u8DD1_u53E6_u4E00_u4E2A_u5BFC_u822A_u680F" class="headerlink" title="实现一个导航栏顶跑另一个导航栏"></a>实现一个导航栏顶跑另一个导航栏</h3><p>利用stiky元素和父元素的关系就可以实现顶跑的功能。<br>如下:</p>
+<pre><code>&lt;div&gt;
+    &lt;div&gt;sticky&lt;/div&gt;
+    &lt;p&gt;......normal&lt;/p&gt;
+&lt;/div&gt;
+&lt;div&gt;
+    &lt;div&gt;stikcy&lt;/div&gt;
+    &lt;p&gt;......normal&lt;/p&gt;
+&lt;/div&gt;
+</code></pre><h3 id="u4F7F_u7528sticky_u52A1_u5FC5_u6CE8_u610F_u7236_u5143_u7D20"><a href="#u4F7F_u7528sticky_u52A1_u5FC5_u6CE8_u610F_u7236_u5143_u7D20" class="headerlink" title="使用sticky务必注意父元素"></a>使用sticky务必注意父元素</h3><p>所以说，父元素是控制sticky的关键元素。当你的sticky设置了米有用，或者不会顶跑，请仔细查看你的父元素，是否是sticky有效的区域。<br>demo我会之后奉上。</p>
+<h3 id="u517C_u5BB9_u6027"><a href="#u517C_u5BB9_u6027" class="headerlink" title="兼容性"></a>兼容性</h3><p>此外，目前是<em>需要前缀</em>的。目前在ios上支持，并且ios7+,ios6有问题不能使用。<br>安卓的解决方案还是用脚本控制，但是不完美，建议直接取消安卓。</p>
+<h2 id="u6A21_u62DF_u6EDA_u52A8"><a href="#u6A21_u62DF_u6EDA_u52A8" class="headerlink" title="模拟滚动"></a>模拟滚动</h2><p>这个是解决触摸卡顿问题的一个办法，但是目前，在许多安卓机器上还是相当卡顿的。但是很多公司都使用了这个方法，我觉得各有好处和缺陷，不好评价这个技术的好坏。</p>
+
+      
+    </div>
+    <footer>
+      
+        
+  
+  <div class="categories">
+    <a href="/categories/css/">css</a>
+  </div>
+
+        
+  
+  <div class="tags">
+    <a href="/tags/css3/">css3</a>, <a href="/tags/优化/">优化</a>, <a href="/tags/导航/">导航</a>
+  </div>
+
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+<section id="comment">
+  <h1 class="title">留言</h1>
+
+  
+  <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+  
+</section>
+
+</div></div>
+    <aside id="sidebar" class="alignright">
+  <div class="search">
+  <form action="//google.com/search" method="get" accept-charset="utf-8">
+    <input type="search" name="q" results="0" placeholder="搜索">
+    <input type="hidden" name="q" value="site:yukihe.com">
+  </form>
+</div>
+
+  
+<div class="widget tag">
+  <h3 class="title">分类</h3>
+  <ul class="entry">
+  
+    <li><a href="/categories/ExtJs/">ExtJs</a><small>1</small></li>
+  
+    <li><a href="/categories/css/">css</a><small>5</small></li>
+  
+    <li><a href="/categories/markdown/">markdown</a><small>1</small></li>
+  
+    <li><a href="/categories/redux/">redux</a><small>1</small></li>
+  
+    <li><a href="/categories/sencha-touch/">sencha touch</a><small>3</small></li>
+  
+    <li><a href="/categories/图片压缩/">图片压缩</a><small>1</small></li>
+  
+    <li><a href="/categories/工具/">工具</a><small>3</small></li>
+  
+    <li><a href="/categories/性能优化/">性能优化</a><small>1</small></li>
+  
+    <li><a href="/categories/爬虫/">爬虫</a><small>1</small></li>
+  
+    <li><a href="/categories/自动化文档/">自动化文档</a><small>1</small></li>
+  
+  </ul>
+</div>
+
+
+  
+<div class="widget tag">
+  <h3 class="title">标签</h3>
+  <ul class="entry">
+  
+    <li><a href="/tags/alfred/">alfred</a><small>1</small></li>
+  
+    <li><a href="/tags/browsersync/">browsersync</a><small>1</small></li>
+  
+    <li><a href="/tags/css/">css</a><small>2</small></li>
+  
+    <li><a href="/tags/css3/">css3</a><small>4</small></li>
+  
+    <li><a href="/tags/gradient/">gradient</a><small>1</small></li>
+  
+    <li><a href="/tags/hexo/">hexo</a><small>1</small></li>
+  
+    <li><a href="/tags/markdown/">markdown</a><small>1</small></li>
+  
+    <li><a href="/tags/phantomJS/">phantomJS</a><small>1</small></li>
+  
+    <li><a href="/tags/phantomJs/">phantomJs</a><small>1</small></li>
+  
+    <li><a href="/tags/proxy/">proxy</a><small>1</small></li>
+  
+    <li><a href="/tags/react/">react</a><small>1</small></li>
+  
+    <li><a href="/tags/redux/">redux</a><small>1</small></li>
+  
+    <li><a href="/tags/restful/">restful</a><small>1</small></li>
+  
+    <li><a href="/tags/sencha-touch/">sencha touch</a><small>2</small></li>
+  
+    <li><a href="/tags/sencha-touch/">sencha-touch</a><small>2</small></li>
+  
+    <li><a href="/tags/store/">store</a><small>1</small></li>
+  
+    <li><a href="/tags/sublime/">sublime</a><small>1</small></li>
+  
+    <li><a href="/tags/webp/">webp</a><small>1</small></li>
+  
+    <li><a href="/tags/websql/">websql</a><small>1</small></li>
+  
+    <li><a href="/tags/优化/">优化</a><small>2</small></li>
+  
+    <li><a href="/tags/兼容性/">兼容性</a><small>1</small></li>
+  
+    <li><a href="/tags/动画/">动画</a><small>1</small></li>
+  
+    <li><a href="/tags/图片压缩/">图片压缩</a><small>1</small></li>
+  
+    <li><a href="/tags/委托/">委托</a><small>1</small></li>
+  
+    <li><a href="/tags/导航/">导航</a><small>1</small></li>
+  
+    <li><a href="/tags/性能/">性能</a><small>1</small></li>
+  
+    <li><a href="/tags/性能优化/">性能优化</a><small>1</small></li>
+  
+    <li><a href="/tags/手势/">手势</a><small>1</small></li>
+  
+    <li><a href="/tags/注释/">注释</a><small>1</small></li>
+  
+    <li><a href="/tags/测试/">测试</a><small>1</small></li>
+  
+    <li><a href="/tags/渲染/">渲染</a><small>1</small></li>
+  
+    <li><a href="/tags/爬虫/">爬虫</a><small>1</small></li>
+  
+    <li><a href="/tags/翻译/">翻译</a><small>1</small></li>
+  
+    <li><a href="/tags/自动化文档/">自动化文档</a><small>1</small></li>
+  
+    <li><a href="/tags/触摸/">触摸</a><small>1</small></li>
+  
+    <li><a href="/tags/调试工具/">调试工具</a><small>1</small></li>
+  
+  </ul>
+</div>
+
+</aside>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div class="alignleft">
+  
+  &copy; 2016 Xue He
+  
+</div>
+<div class="clearfix"></div></footer>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+
+<script type="text/javascript">
+var disqus_shortname = 'hexohexue';
+
+(function(){
+  var dsq = document.createElement('script');
+  dsq.type = 'text/javascript';
+  dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+}());
+</script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+</body>
+</html>

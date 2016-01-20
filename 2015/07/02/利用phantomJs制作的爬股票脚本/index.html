@@ -1,0 +1,375 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>利用phantomJs制作的爬股票脚本 | Persimmon Kneader</title>
+  <meta name="author" content="Xue He">
+  
+  <meta name="description" content="技术博客">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="利用phantomJs制作的爬股票脚本"/>
+  <meta property="og:site_name" content="Persimmon Kneader"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  <link href="/favicon.png" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="Persimmon Kneader" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  
+<script>
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+	ga('create', 'UA-52998995-1', 'auto');
+	ga('send', 'pageview');
+
+</script>
+
+
+  <script>
+  var _hmt = _hmt || [];
+  (function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?290e001b4a2e8fd868d1eea78cbf6f9f";
+    var s = document.getElementsByTagName("script")[0]; 
+    s.parentNode.insertBefore(hm, s);
+  })();
+  </script>
+</head>
+
+
+<body>
+  <header id="header" class="inner"><div class="alignleft">
+  <h1><a href="/">Persimmon Kneader</a></h1>
+  <h2><a href="/">Front-End Developer</a></h2>
+</div>
+<nav id="main-nav" class="alignright">
+  <ul>
+    
+      <li><a href="//">Home</a></li>
+    
+      <li><a href="//archives">Archives</a></li>
+    
+      <li><a href="//aboutme">About Me</a></li>
+    
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+<div class="clearfix"></div>
+</header>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper"><article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2015-07-02T14:41:48.000Z"><a href="/2015/07/02/利用phantomJs制作的爬股票脚本/">2015-07-02</a></time>
+      
+      
+  
+    <h1 class="title">利用phantomJs制作的爬股票脚本</h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>思路：</p>
+<ol>
+<li>利用phantomJs爬取同花顺网站。</li>
+<li>利用选择器找到网站上的价格数据。</li>
+<li>利用每隔一秒重新获取价格的方式拿到实时的价格。</li>
+<li>在命令行显示一个界面显示价格。</li>
+</ol>
+<p>大概就是这样。一边写一边来吧。</p>
+<h1 id="phantomJs"><a href="#phantomJs" class="headerlink" title="phantomJs"></a>phantomJs</h1><p>目前我只知道phantomJs是干嘛用的：就是提供一个模拟浏览器的环境。<br>然后去看看怎么用这个玩意。<br><a id="more"></a></p>
+<h2 id="u5B89_u88C5"><a href="#u5B89_u88C5" class="headerlink" title="安装"></a>安装</h2><p>官方的网址-&gt;<a href="http://phantomjs.org/build.html" target="_blank" rel="external">http://phantomjs.org/build.html</a><br>然后根据教程来进行安装，本来安装步骤是不打算写的，但是没想到今天网不太好，git下载了好久都没有下载好。</p>
+<h3 id="u5B89_u88C5_u6B65_u9AA4_uFF1A"><a href="#u5B89_u88C5_u6B65_u9AA4_uFF1A" class="headerlink" title="安装步骤："></a>安装步骤：</h3><pre><code>git clone git://github.com/ariya/phantomjs.git
+cd phantomjs
+git checkout 2.0
+./build.sh --qt-config &quot;-I /usr/local/include/ -L /usr/local/lib/&quot;
+</code></pre><p>……等了很久还没有下载完。<br>于是看到了这里：<a href="http://phantomjs.org/download.html" target="_blank" rel="external">download</a><br>直接下载了zip包.=……=<br>最终获得是是<code>bin/phantomjs.exe</code>这个文件。</p>
+<h3 id="u5B89_u88C5_u65B9_u6CD52"><a href="#u5B89_u88C5_u65B9_u6CD52" class="headerlink" title="安装方法2"></a>安装方法2</h3><p>还有个办法是使用npm或者brew安装，就不细说了，大家应该都懂。</p>
+<h3 id="u5B89_u88C5_u65B9_u6CD53"><a href="#u5B89_u88C5_u65B9_u6CD53" class="headerlink" title="安装方法3"></a>安装方法3</h3><p>淘宝镜像有<a href="http://npm.taobao.org/mirrors/phantomjs" target="_blank" rel="external">下载地址</a></p>
+<h1 id="u7F16_u5199_u811A_u672C"><a href="#u7F16_u5199_u811A_u672C" class="headerlink" title="编写脚本"></a>编写脚本</h1><p>ok，接下来进行脚本的编写啦。<br>我建立一个名为<code>run.js</code>的脚本。<br>恰巧看到start中有个类似的demo是这样的。</p>
+<pre><code>var page = require(&apos;webpage&apos;).create();
+page.open(url, function(status) {
+  var title = page.evaluate(function() {
+    return document.title;
+  });
+  console.log(&apos;Page title is &apos; + title);
+  phantom.exit();
+});
+</code></pre><p>貌似是一个打开一个页面后获得页面的标题的作用。那我只要改改这个demo，不用获得标题，只需要查找页面的一个价格元素就可以了。<br>接着我找到了雪球网的网址<a href="http://xueqiu.com/S/SH000001" target="_blank" rel="external">http://xueqiu.com/S/SH000001</a><br>显然这个域名后面跟着#的就是股票代码了。接着我替换url：</p>
+<pre><code>var page = require(&apos;webpage&apos;).create();
+var code = &apos;SH000001&apos;;
+page.open(&apos;http://xueqiu.com/S/&apos;+code, function(status) {
+  var title = page.evaluate(function() {
+    return document.title;
+  });
+  console.log(&apos;Page title is &apos; + title);
+  phantom.exit();
+});
+</code></pre><p>接下来去雪球的网站上找到价格的选择器:<code>.currentInfo .stockDown</code>,这个选择器能选到两个元素，包含了当前的价格，当前的波动幅度等重要数据。修改代码：</p>
+<pre><code>var page = require(&apos;webpage&apos;).create();
+var code = &apos;SH000001&apos;;
+page.open(&apos;http://xueqiu.com/S/&apos;+code, function(status) {
+  var price = page.evaluate(function() {
+    var res = &apos;&apos;,
+        doms = document.querySelectorAll(&apos;.currentInfo&apos;);
+    [].forEach.call(doms, function(item) {
+        res += &apos;\t&apos; + item.textContent;
+    });
+    return res;
+  });
+  console.log(&apos;Price is &apos; + price);
+  phantom.exit();
+});
+</code></pre><p>启动却发现，doms里面什么元素都没有，我用<code>page.render</code>方法截了个图，发现403被阻止了。网上调查发现，爬虫脚本经常会出现这种问题。于是我改了一下请求的头部信息，模拟成真实数据的请求：</p>
+<pre><code>page.onResourceRequested = function(requestData, networkRequest) {
+    networkRequest.setHeader(&apos;User-Agent&apos;,
+        &apos;Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.130 Safari/537.36&apos;
+    );
+};
+</code></pre><p>此时，我发现选择器拿到的文本在windows环境下出现了乱码，于是我要筛选出需要的数据：</p>
+<pre><code>res = res.replace(/[^0-9.+\-%\s\(\)]/g, &apos;&apos;);
+</code></pre><p>下面，把股票的代码写活了，通过命令行参数传递，默认上证指数。</p>
+<pre><code>var page = require(&apos;webpage&apos;).create(),
+    system = require(&apos;system&apos;),
+    code = encodeURIComponent(system.args[1] || &apos;&apos;),
+    url = &apos;http://xueqiu.com/S/&apos; + (code || &apos;SH000001&apos;);
+</code></pre><p>好了，最后把代码整合一下，做一下<code>setInterval</code>每隔一秒数据刷新，最终的代码是这样的：</p>
+<pre><code>var page = require(&apos;webpage&apos;).create(),
+    system = require(&apos;system&apos;),
+    code = encodeURIComponent(system.args[1] || &apos;&apos;),
+    url = &apos;http://xueqiu.com/S/&apos; + (code || &apos;SH000001&apos;);
+page.onResourceRequested = function(requestData, networkRequest) {
+    networkRequest.setHeader(&apos;User-Agent&apos;,
+        &apos;Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.130 Safari/537.36&apos;
+    );
+};
+page.open(url, function(status) {
+    if(status !== &apos;success&apos;) {
+        return;
+    }
+    console.log(&apos;NowPrice is:&apos; + page.evaluate(getLatestPrice));
+    setInterval(function() {
+        console.log(&apos;NowPrice is:&apos; + page.evaluate(
+            getLatestPrice));
+    }, 1000)
+});
+
+function getLatestPrice() {
+    var res = &apos;&apos;;
+    var doms = document.querySelectorAll(&apos;.currentInfo&apos;);
+    [].forEach.call(doms, function(item) {
+        res += &apos;\t&apos; + item.textContent;
+    });
+    res = res.replace(/[^0-9.+\-%\s\(\)]/g, &apos;&apos;);
+    return res;
+}
+</code></pre><p>人生第一个爬虫脚本做好啦，开心~！简单实用，够我好好用了。。</p>
+<h2 id="7_u67089_u65E5_u66F4_u65B0"><a href="#7_u67089_u65E5_u66F4_u65B0" class="headerlink" title="7月9日更新"></a>7月9日更新</h2><p>猛然有一天发现phantomjs也被fiddler抓到了请求。</p>
+<p>猛然发现。股票数据请求在一条一条地发。。。</p>
+<p>猛然发现真是什么数据都有。。。。</p>
+<p>好吧，这篇文章就是phantomjs入门。。。等我空了修改修改爬股股脚本再共享出来。。</p>
+
+      
+    </div>
+    <footer>
+      
+        
+  
+  <div class="categories">
+    <a href="/categories/爬虫/">爬虫</a>
+  </div>
+
+        
+  
+  <div class="tags">
+    <a href="/tags/phantomJs/">phantomJs</a>
+  </div>
+
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+<section id="comment">
+  <h1 class="title">留言</h1>
+
+  
+  <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+  
+</section>
+
+</div></div>
+    <aside id="sidebar" class="alignright">
+  <div class="search">
+  <form action="//google.com/search" method="get" accept-charset="utf-8">
+    <input type="search" name="q" results="0" placeholder="搜索">
+    <input type="hidden" name="q" value="site:yukihe.com">
+  </form>
+</div>
+
+  
+<div class="widget tag">
+  <h3 class="title">分类</h3>
+  <ul class="entry">
+  
+    <li><a href="/categories/ExtJs/">ExtJs</a><small>1</small></li>
+  
+    <li><a href="/categories/css/">css</a><small>5</small></li>
+  
+    <li><a href="/categories/markdown/">markdown</a><small>1</small></li>
+  
+    <li><a href="/categories/redux/">redux</a><small>1</small></li>
+  
+    <li><a href="/categories/sencha-touch/">sencha touch</a><small>3</small></li>
+  
+    <li><a href="/categories/图片压缩/">图片压缩</a><small>1</small></li>
+  
+    <li><a href="/categories/工具/">工具</a><small>3</small></li>
+  
+    <li><a href="/categories/性能优化/">性能优化</a><small>1</small></li>
+  
+    <li><a href="/categories/爬虫/">爬虫</a><small>1</small></li>
+  
+    <li><a href="/categories/自动化文档/">自动化文档</a><small>1</small></li>
+  
+  </ul>
+</div>
+
+
+  
+<div class="widget tag">
+  <h3 class="title">标签</h3>
+  <ul class="entry">
+  
+    <li><a href="/tags/alfred/">alfred</a><small>1</small></li>
+  
+    <li><a href="/tags/browsersync/">browsersync</a><small>1</small></li>
+  
+    <li><a href="/tags/css/">css</a><small>2</small></li>
+  
+    <li><a href="/tags/css3/">css3</a><small>4</small></li>
+  
+    <li><a href="/tags/gradient/">gradient</a><small>1</small></li>
+  
+    <li><a href="/tags/hexo/">hexo</a><small>1</small></li>
+  
+    <li><a href="/tags/markdown/">markdown</a><small>1</small></li>
+  
+    <li><a href="/tags/phantomJS/">phantomJS</a><small>1</small></li>
+  
+    <li><a href="/tags/phantomJs/">phantomJs</a><small>1</small></li>
+  
+    <li><a href="/tags/proxy/">proxy</a><small>1</small></li>
+  
+    <li><a href="/tags/react/">react</a><small>1</small></li>
+  
+    <li><a href="/tags/redux/">redux</a><small>1</small></li>
+  
+    <li><a href="/tags/restful/">restful</a><small>1</small></li>
+  
+    <li><a href="/tags/sencha-touch/">sencha touch</a><small>2</small></li>
+  
+    <li><a href="/tags/sencha-touch/">sencha-touch</a><small>2</small></li>
+  
+    <li><a href="/tags/store/">store</a><small>1</small></li>
+  
+    <li><a href="/tags/sublime/">sublime</a><small>1</small></li>
+  
+    <li><a href="/tags/webp/">webp</a><small>1</small></li>
+  
+    <li><a href="/tags/websql/">websql</a><small>1</small></li>
+  
+    <li><a href="/tags/优化/">优化</a><small>2</small></li>
+  
+    <li><a href="/tags/兼容性/">兼容性</a><small>1</small></li>
+  
+    <li><a href="/tags/动画/">动画</a><small>1</small></li>
+  
+    <li><a href="/tags/图片压缩/">图片压缩</a><small>1</small></li>
+  
+    <li><a href="/tags/委托/">委托</a><small>1</small></li>
+  
+    <li><a href="/tags/导航/">导航</a><small>1</small></li>
+  
+    <li><a href="/tags/性能/">性能</a><small>1</small></li>
+  
+    <li><a href="/tags/性能优化/">性能优化</a><small>1</small></li>
+  
+    <li><a href="/tags/手势/">手势</a><small>1</small></li>
+  
+    <li><a href="/tags/注释/">注释</a><small>1</small></li>
+  
+    <li><a href="/tags/测试/">测试</a><small>1</small></li>
+  
+    <li><a href="/tags/渲染/">渲染</a><small>1</small></li>
+  
+    <li><a href="/tags/爬虫/">爬虫</a><small>1</small></li>
+  
+    <li><a href="/tags/翻译/">翻译</a><small>1</small></li>
+  
+    <li><a href="/tags/自动化文档/">自动化文档</a><small>1</small></li>
+  
+    <li><a href="/tags/触摸/">触摸</a><small>1</small></li>
+  
+    <li><a href="/tags/调试工具/">调试工具</a><small>1</small></li>
+  
+  </ul>
+</div>
+
+</aside>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div class="alignleft">
+  
+  &copy; 2016 Xue He
+  
+</div>
+<div class="clearfix"></div></footer>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+
+<script type="text/javascript">
+var disqus_shortname = 'hexohexue';
+
+(function(){
+  var dsq = document.createElement('script');
+  dsq.type = 'text/javascript';
+  dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+}());
+</script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+</body>
+</html>

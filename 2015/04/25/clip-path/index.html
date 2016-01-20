@@ -1,0 +1,301 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>clip-path | Persimmon Kneader</title>
+  <meta name="author" content="Xue He">
+  
+  <meta name="description" content="技术博客">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="clip-path"/>
+  <meta property="og:site_name" content="Persimmon Kneader"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  <link href="/favicon.png" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="Persimmon Kneader" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  
+<script>
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+	ga('create', 'UA-52998995-1', 'auto');
+	ga('send', 'pageview');
+
+</script>
+
+
+  <script>
+  var _hmt = _hmt || [];
+  (function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?290e001b4a2e8fd868d1eea78cbf6f9f";
+    var s = document.getElementsByTagName("script")[0]; 
+    s.parentNode.insertBefore(hm, s);
+  })();
+  </script>
+</head>
+
+
+<body>
+  <header id="header" class="inner"><div class="alignleft">
+  <h1><a href="/">Persimmon Kneader</a></h1>
+  <h2><a href="/">Front-End Developer</a></h2>
+</div>
+<nav id="main-nav" class="alignright">
+  <ul>
+    
+      <li><a href="//">Home</a></li>
+    
+      <li><a href="//archives">Archives</a></li>
+    
+      <li><a href="//aboutme">About Me</a></li>
+    
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+<div class="clearfix"></div>
+</header>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper"><article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2015-04-25T12:31:45.000Z"><a href="/2015/04/25/clip-path/">2015-04-25</a></time>
+      
+      
+  
+    <h1 class="title">clip-path</h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>趁着这两天比较闲研究了一下这个月风靡一时的属性clip-path。<br>起先关注到这个属性是看到了一个非常酷的<a href="http://species-in-pieces.com/#" target="_blank" rel="external">网站</a><br>后来在微博上先后看到了很多人对它的解析，使用的是css3的clip-path属性。<br><a id="more"></a></p>
+<h1 id="clip-path_u662F_u4E2A_u4EC0_u4E48_u6837_u5B50_u7684_u5C5E_u6027"><a href="#clip-path_u662F_u4E2A_u4EC0_u4E48_u6837_u5B50_u7684_u5C5E_u6027" class="headerlink" title="clip-path是个什么样子的属性"></a>clip-path是个什么样子的属性</h1><p>clip-path的意思就是裁剪路径，就是把一个对象，进行裁剪后成为你要的形状。<br><a href="http://bennettfeely.com/clippy/" target="_blank" rel="external">一个可以切图片的网站</a><br>使用这个网站可以获得基本的<em>clip-path</em>是做什么的概念，顺便可以用用，这个切图片比较方便。</p>
+<h1 id="clip-path_u57FA_u672C_u7528_u6CD5_u7B80_u4ECB"><a href="#clip-path_u57FA_u672C_u7528_u6CD5_u7B80_u4ECB" class="headerlink" title="clip-path基本用法简介"></a>clip-path基本用法简介</h1><p>利用上面的网站直接获得代码固然方便，但是基础用法还是需要去了解。</p>
+<h2 id="inset_28_29"><a href="#inset_28_29" class="headerlink" title="inset()"></a>inset()</h2><p>裁剪一个矩形（可以带圆角），但是不是你想怎么矩就怎么矩的矩形（想要这种矩形用polygon），是一个相对于外框内缩自定义距离的矩形。</p>
+<pre><code>clip-path:inset( &lt;shape-arg&gt;{1,4} [round &lt;border-radius&gt;]? )
+</code></pre><p>前面四个值代表上右下左的内缩距离，后面的值代表了圆角大小<br>eg:</p>
+<pre><code>clip-path: inset(2% 0% 0% 0% round 50% 20% 15px 20px);
+</code></pre><h2 id="circle_28_29"><a href="#circle_28_29" class="headerlink" title="circle()"></a>circle()</h2><p>裁剪一个圆。</p>
+<pre><code>clip-path:circle( [&lt;shape-radius&gt;]? [at &lt;position&gt;]? )
+</code></pre><p>圆半径大小 at 圆心位置<br>eg:</p>
+<pre><code>-webkit-clip-path: circle(40% at 50% 50%);
+</code></pre><h2 id="ellipse_28_29"><a href="#ellipse_28_29" class="headerlink" title="ellipse()"></a>ellipse()</h2><p>椭圆</p>
+<pre><code>clip-path:ellipse( [&lt;shape-radius&gt;{2}]? [at &lt;position&gt;]? )
+</code></pre><p>宽半径 长半径 at 中心位置<br>eg:</p>
+<pre><code>-webkit-clip-path: ellipse(52% 50% at 50% 50%);
+</code></pre><h2 id="polygon_28_29"><a href="#polygon_28_29" class="headerlink" title="polygon()"></a>polygon()</h2><p>多边形</p>
+<pre><code>clip-path:polygon( [&lt;fill-rule&gt;,]? [&lt;shape-arg&gt; &lt;shape-arg&gt;]# )
+</code></pre><p>第一个值可以不写，写的话是nonzero&amp;evenodd中选一个。<br>nonzero是默认选项。这个值决定某一点是在内部还是外部。可以看<a href="http://www.w3cschool.cc/svg/svg-polygon.html" target="_blank" rel="external">这个</a>感受一下这个值干嘛用的.<br>后面的值就是裁剪的点坐标，按先后顺序绘制路径。<br>eg:</p>
+<pre><code>clip-path: polygon(nonzero,50% 0%, 100% 100%, 0% 100%);
+</code></pre><p>上面是个三角形</p>
+<h1 id="u52A8_u753B"><a href="#u52A8_u753B" class="headerlink" title="动画"></a>动画</h1><p>使用<code>transition:clip-path .5s</code>，并且变化clip-path的路径可以制作文章最开头的那种炫酷的动画。<br>如果每个碎片都能有自己不同的dela时间件就更酷了。<br>此外，要相同的点坐标数量才能够做动画，不同的点坐标是连贯不起来的。</p>
+<h1 id="u788E_u7247_u98CE_u683C_u548C_u88C1_u526A_u98CE_u666F_u56FE_u7247"><a href="#u788E_u7247_u98CE_u683C_u548C_u88C1_u526A_u98CE_u666F_u56FE_u7247" class="headerlink" title="碎片风格和裁剪风景图片"></a>碎片风格和裁剪风景图片</h1><p>无疑这两个是最近比较时尚的点，clip-path都能够驾驭。<br>clip-path真是个比较潮的属性啊。。。</p>
+<h1 id="others"><a href="#others" class="headerlink" title="others"></a>others</h1><h2 id="u914D_u5408sass"><a href="#u914D_u5408sass" class="headerlink" title="配合sass"></a>配合sass</h2><p>如果确定要用clip-path画图片或者做动画的话请务必使用函数的写法写css。循环会有很大的帮助。并且，大部分的工作量是在获取很多很多坐标上。</p>
+<h2 id="u517C_u5BB9_u6027"><a href="#u517C_u5BB9_u6027" class="headerlink" title="兼容性"></a>兼容性</h2><p>兼容性不是太好,需要带前缀。见<a href="http://caniuse.com/#search=clip-path" target="_blank" rel="external">caniuse</a></p>
+<h2 id="u62D3_u5C55"><a href="#u62D3_u5C55" class="headerlink" title="拓展"></a>拓展</h2><p><a href="http://www.html-js.com/article/2815" target="_blank" rel="external">利用clip-path打造3D模型渲染器</a></p>
+
+      
+    </div>
+    <footer>
+      
+        
+  
+  <div class="categories">
+    <a href="/categories/css/">css</a>
+  </div>
+
+        
+  
+  <div class="tags">
+    <a href="/tags/css3/">css3</a>, <a href="/tags/动画/">动画</a>
+  </div>
+
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+<section id="comment">
+  <h1 class="title">留言</h1>
+
+  
+  <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+  
+</section>
+
+</div></div>
+    <aside id="sidebar" class="alignright">
+  <div class="search">
+  <form action="//google.com/search" method="get" accept-charset="utf-8">
+    <input type="search" name="q" results="0" placeholder="搜索">
+    <input type="hidden" name="q" value="site:yukihe.com">
+  </form>
+</div>
+
+  
+<div class="widget tag">
+  <h3 class="title">分类</h3>
+  <ul class="entry">
+  
+    <li><a href="/categories/ExtJs/">ExtJs</a><small>1</small></li>
+  
+    <li><a href="/categories/css/">css</a><small>5</small></li>
+  
+    <li><a href="/categories/markdown/">markdown</a><small>1</small></li>
+  
+    <li><a href="/categories/redux/">redux</a><small>1</small></li>
+  
+    <li><a href="/categories/sencha-touch/">sencha touch</a><small>3</small></li>
+  
+    <li><a href="/categories/图片压缩/">图片压缩</a><small>1</small></li>
+  
+    <li><a href="/categories/工具/">工具</a><small>3</small></li>
+  
+    <li><a href="/categories/性能优化/">性能优化</a><small>1</small></li>
+  
+    <li><a href="/categories/爬虫/">爬虫</a><small>1</small></li>
+  
+    <li><a href="/categories/自动化文档/">自动化文档</a><small>1</small></li>
+  
+  </ul>
+</div>
+
+
+  
+<div class="widget tag">
+  <h3 class="title">标签</h3>
+  <ul class="entry">
+  
+    <li><a href="/tags/alfred/">alfred</a><small>1</small></li>
+  
+    <li><a href="/tags/browsersync/">browsersync</a><small>1</small></li>
+  
+    <li><a href="/tags/css/">css</a><small>2</small></li>
+  
+    <li><a href="/tags/css3/">css3</a><small>4</small></li>
+  
+    <li><a href="/tags/gradient/">gradient</a><small>1</small></li>
+  
+    <li><a href="/tags/hexo/">hexo</a><small>1</small></li>
+  
+    <li><a href="/tags/markdown/">markdown</a><small>1</small></li>
+  
+    <li><a href="/tags/phantomJS/">phantomJS</a><small>1</small></li>
+  
+    <li><a href="/tags/phantomJs/">phantomJs</a><small>1</small></li>
+  
+    <li><a href="/tags/proxy/">proxy</a><small>1</small></li>
+  
+    <li><a href="/tags/react/">react</a><small>1</small></li>
+  
+    <li><a href="/tags/redux/">redux</a><small>1</small></li>
+  
+    <li><a href="/tags/restful/">restful</a><small>1</small></li>
+  
+    <li><a href="/tags/sencha-touch/">sencha touch</a><small>2</small></li>
+  
+    <li><a href="/tags/sencha-touch/">sencha-touch</a><small>2</small></li>
+  
+    <li><a href="/tags/store/">store</a><small>1</small></li>
+  
+    <li><a href="/tags/sublime/">sublime</a><small>1</small></li>
+  
+    <li><a href="/tags/webp/">webp</a><small>1</small></li>
+  
+    <li><a href="/tags/websql/">websql</a><small>1</small></li>
+  
+    <li><a href="/tags/优化/">优化</a><small>2</small></li>
+  
+    <li><a href="/tags/兼容性/">兼容性</a><small>1</small></li>
+  
+    <li><a href="/tags/动画/">动画</a><small>1</small></li>
+  
+    <li><a href="/tags/图片压缩/">图片压缩</a><small>1</small></li>
+  
+    <li><a href="/tags/委托/">委托</a><small>1</small></li>
+  
+    <li><a href="/tags/导航/">导航</a><small>1</small></li>
+  
+    <li><a href="/tags/性能/">性能</a><small>1</small></li>
+  
+    <li><a href="/tags/性能优化/">性能优化</a><small>1</small></li>
+  
+    <li><a href="/tags/手势/">手势</a><small>1</small></li>
+  
+    <li><a href="/tags/注释/">注释</a><small>1</small></li>
+  
+    <li><a href="/tags/测试/">测试</a><small>1</small></li>
+  
+    <li><a href="/tags/渲染/">渲染</a><small>1</small></li>
+  
+    <li><a href="/tags/爬虫/">爬虫</a><small>1</small></li>
+  
+    <li><a href="/tags/翻译/">翻译</a><small>1</small></li>
+  
+    <li><a href="/tags/自动化文档/">自动化文档</a><small>1</small></li>
+  
+    <li><a href="/tags/触摸/">触摸</a><small>1</small></li>
+  
+    <li><a href="/tags/调试工具/">调试工具</a><small>1</small></li>
+  
+  </ul>
+</div>
+
+</aside>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div class="alignleft">
+  
+  &copy; 2016 Xue He
+  
+</div>
+<div class="clearfix"></div></footer>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+
+<script type="text/javascript">
+var disqus_shortname = 'hexohexue';
+
+(function(){
+  var dsq = document.createElement('script');
+  dsq.type = 'text/javascript';
+  dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+}());
+</script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+</body>
+</html>

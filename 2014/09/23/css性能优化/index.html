@@ -1,0 +1,323 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>css性能优化 | Persimmon Kneader</title>
+  <meta name="author" content="Xue He">
+  
+  <meta name="description" content="技术博客">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="css性能优化"/>
+  <meta property="og:site_name" content="Persimmon Kneader"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  <link href="/favicon.png" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="Persimmon Kneader" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  
+<script>
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+	ga('create', 'UA-52998995-1', 'auto');
+	ga('send', 'pageview');
+
+</script>
+
+
+  <script>
+  var _hmt = _hmt || [];
+  (function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?290e001b4a2e8fd868d1eea78cbf6f9f";
+    var s = document.getElementsByTagName("script")[0]; 
+    s.parentNode.insertBefore(hm, s);
+  })();
+  </script>
+</head>
+
+
+<body>
+  <header id="header" class="inner"><div class="alignleft">
+  <h1><a href="/">Persimmon Kneader</a></h1>
+  <h2><a href="/">Front-End Developer</a></h2>
+</div>
+<nav id="main-nav" class="alignright">
+  <ul>
+    
+      <li><a href="//">Home</a></li>
+    
+      <li><a href="//archives">Archives</a></li>
+    
+      <li><a href="//aboutme">About Me</a></li>
+    
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+<div class="clearfix"></div>
+</header>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper"><article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2014-09-23T13:28:26.000Z"><a href="/2014/09/23/css性能优化/">2014-09-23</a></time>
+      
+      
+  
+    <h1 class="title">css性能优化</h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>最近查阅了很多资料，总结一下css性能和优化方面的一点知识。<br><a id="more"></a></p>
+<h2 id="u4F7F_u7528_u5355_u4E00_u7684css_u6587_u4EF6"><a href="#u4F7F_u7528_u5355_u4E00_u7684css_u6587_u4EF6" class="headerlink" title="使用单一的css文件"></a>使用单一的css文件</h2><p>虽然css提供了下面的方法来引入样式：</p>
+<p>@import url(/css/aaa.css);</p>
+<p>但是并不推荐这种做法：</p>
+<ol>
+<li>导入样式表比连接样式表慢</li>
+<li>多个样式文件—&gt;服务器会发送更多数据包—&gt;下载慢</li>
+<li>并行下载数量有限，老式浏览器不能同时下载多余2个文</li>
+<li>单一css容易维护</li>
+</ol>
+<h2 id="u7F29_u5C0F_u5B57_u8282"><a href="#u7F29_u5C0F_u5B57_u8282" class="headerlink" title="缩小字节"></a>缩小字节</h2><ol>
+<li>颜色缩写成3位或字数更少的字母形式：<br>eg. #ff0000 &gt; #f00 &gt; red</li>
+<li>0.1,0.2这种数字直接变成.1,.2</li>
+<li>长的类名缩写成短小的，这要和html和js一起改麻烦了点.</li>
+<li>减少多余的空格,不要换行。</li>
+<li>减少多余的分号</li>
+<li>删除注释</li>
+<li>删除多余不用的css</li>
+</ol>
+<p>缩减字节的这种压缩方式可以交给一些压缩工具来执行。<br>在这里推荐：<a href="http://cssshrink.com/" target="_blank" rel="external">CSS Shrink</a><br>CSS Shrink 是由来自 Facebook 的工程师 Stoyan Stefanov 开发的一个 CSS 压缩工具，与像 yuicompressor 之类的基于正则匹配的 css 压缩工具不同在于该工具是通过 AST（抽象语法树）对 css 做代码分析进行更智能的压缩，同时提供了基于 grunt 和 gulp 的插件。</p>
+<p>关于第七点的补充：在 Chrome 开发者工具中，打开审计（Audits）面板，然后运行一次网页性能（Web Page Performance）报告。在生成的报告中，找一下“删除未使用的 CSS 规则（Remove unused CSS rules）”。也可以使用其它第三方工具或脚本，来识别每个页面分别应用了哪些 CSS 选择符。</p>
+<h2 id="u4F18_u5316css_u9009_u62E9_u5668"><a href="#u4F18_u5316css_u9009_u62E9_u5668" class="headerlink" title="优化css选择器"></a>优化css选择器</h2><p>首先有个前提：浏览器处理选择器的顺序是从右向左的，只要当前选择符的左边还有其他选择符，样式系统就会继续向左移动，直到找到和规则匹配的元素，或者因为不匹配而退出。</p>
+<p><strong>css选择器性能排行（从最快的开始）</strong>：</p>
+<ul>
+<li>ID选择器：#id</li>
+<li>class选择器： .class</li>
+<li>标签: div</li>
+<li>相邻的兄弟元素：a + i</li>
+<li>子代选择器： ul &gt; li</li>
+<li>后代选择器：div div</li>
+<li>通配符选择器： * </li>
+<li>属性选择器:a[rel=”external”]</li>
+<li>伪类和伪元素： a:hover </li>
+</ul>
+<p>由上表总结出：</p>
+<ol>
+<li>避免使用通配符</li>
+<li>避免使用子代选择器，此外，子代选择器和html结构之间太过耦合不利于维护。</li>
+<li>多用class和id选择器，他们效率最高</li>
+<li>id选择器之前就不需要加class或者标签了。id是页面唯一的，已经可以找到，再加class和标签它在之前就是多余的，反而会消耗浏览器资源，浏览器会继续查找样式。此外，img#a 并不会匹配 div#a。</li>
+<li>也不要在使用class时使用标签</li>
+<li>将多层的标签选择用class替换,减少css层数以减少查找</li>
+<li>ps:css3选择器性能很差的,它会消耗很多资源，如果对性能敏感就不要使用了。</li>
+</ol>
+<p>总的来说多用class选择器,id性能最好,但是由于唯一性用起来要小心。通配符，子代是别用了。其实后代经常能用到，写起来比较方便我还是很难割舍，其他的会因为具体条件和特殊情况下使用的。css3选择器的话，如果我不做移动web的，就不太怕性能什么的问题了，也可以考虑。</p>
+<h2 id="u51CF_u5C11css_u8868_u8FBE_u5F0F"><a href="#u51CF_u5C11css_u8868_u8FBE_u5F0F" class="headerlink" title="减少css表达式"></a>减少css表达式</h2><p>css表达式的计算频率是个需要被考虑的问题。随着页面的显示，缩放，鼠标位置，布局的调整，css动画等事件的发生而计算超级多次css表达式。一来要避免使用css表达式，二来要尽量使用一次性的表达式，或者使用事件句柄来代替css表达式。</p>
+<h2 id="u672A_u5B8C_u5F85_u7EED"><a href="#u672A_u5B8C_u5F85_u7EED" class="headerlink" title="未完待续"></a>未完待续</h2><p>以后看到还有什么优化方式还是会来补充的。我相信优化这条道路是没有尽头的。</p>
+
+      
+    </div>
+    <footer>
+      
+        
+  
+  <div class="categories">
+    <a href="/categories/css/">css</a>
+  </div>
+
+        
+  
+  <div class="tags">
+    <a href="/tags/css/">css</a>, <a href="/tags/优化/">优化</a>, <a href="/tags/性能/">性能</a>
+  </div>
+
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+<section id="comment">
+  <h1 class="title">留言</h1>
+
+  
+  <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+  
+</section>
+
+</div></div>
+    <aside id="sidebar" class="alignright">
+  <div class="search">
+  <form action="//google.com/search" method="get" accept-charset="utf-8">
+    <input type="search" name="q" results="0" placeholder="搜索">
+    <input type="hidden" name="q" value="site:yukihe.com">
+  </form>
+</div>
+
+  
+<div class="widget tag">
+  <h3 class="title">分类</h3>
+  <ul class="entry">
+  
+    <li><a href="/categories/ExtJs/">ExtJs</a><small>1</small></li>
+  
+    <li><a href="/categories/css/">css</a><small>5</small></li>
+  
+    <li><a href="/categories/markdown/">markdown</a><small>1</small></li>
+  
+    <li><a href="/categories/redux/">redux</a><small>1</small></li>
+  
+    <li><a href="/categories/sencha-touch/">sencha touch</a><small>3</small></li>
+  
+    <li><a href="/categories/图片压缩/">图片压缩</a><small>1</small></li>
+  
+    <li><a href="/categories/工具/">工具</a><small>3</small></li>
+  
+    <li><a href="/categories/性能优化/">性能优化</a><small>1</small></li>
+  
+    <li><a href="/categories/爬虫/">爬虫</a><small>1</small></li>
+  
+    <li><a href="/categories/自动化文档/">自动化文档</a><small>1</small></li>
+  
+  </ul>
+</div>
+
+
+  
+<div class="widget tag">
+  <h3 class="title">标签</h3>
+  <ul class="entry">
+  
+    <li><a href="/tags/alfred/">alfred</a><small>1</small></li>
+  
+    <li><a href="/tags/browsersync/">browsersync</a><small>1</small></li>
+  
+    <li><a href="/tags/css/">css</a><small>2</small></li>
+  
+    <li><a href="/tags/css3/">css3</a><small>4</small></li>
+  
+    <li><a href="/tags/gradient/">gradient</a><small>1</small></li>
+  
+    <li><a href="/tags/hexo/">hexo</a><small>1</small></li>
+  
+    <li><a href="/tags/markdown/">markdown</a><small>1</small></li>
+  
+    <li><a href="/tags/phantomJS/">phantomJS</a><small>1</small></li>
+  
+    <li><a href="/tags/phantomJs/">phantomJs</a><small>1</small></li>
+  
+    <li><a href="/tags/proxy/">proxy</a><small>1</small></li>
+  
+    <li><a href="/tags/react/">react</a><small>1</small></li>
+  
+    <li><a href="/tags/redux/">redux</a><small>1</small></li>
+  
+    <li><a href="/tags/restful/">restful</a><small>1</small></li>
+  
+    <li><a href="/tags/sencha-touch/">sencha touch</a><small>2</small></li>
+  
+    <li><a href="/tags/sencha-touch/">sencha-touch</a><small>2</small></li>
+  
+    <li><a href="/tags/store/">store</a><small>1</small></li>
+  
+    <li><a href="/tags/sublime/">sublime</a><small>1</small></li>
+  
+    <li><a href="/tags/webp/">webp</a><small>1</small></li>
+  
+    <li><a href="/tags/websql/">websql</a><small>1</small></li>
+  
+    <li><a href="/tags/优化/">优化</a><small>2</small></li>
+  
+    <li><a href="/tags/兼容性/">兼容性</a><small>1</small></li>
+  
+    <li><a href="/tags/动画/">动画</a><small>1</small></li>
+  
+    <li><a href="/tags/图片压缩/">图片压缩</a><small>1</small></li>
+  
+    <li><a href="/tags/委托/">委托</a><small>1</small></li>
+  
+    <li><a href="/tags/导航/">导航</a><small>1</small></li>
+  
+    <li><a href="/tags/性能/">性能</a><small>1</small></li>
+  
+    <li><a href="/tags/性能优化/">性能优化</a><small>1</small></li>
+  
+    <li><a href="/tags/手势/">手势</a><small>1</small></li>
+  
+    <li><a href="/tags/注释/">注释</a><small>1</small></li>
+  
+    <li><a href="/tags/测试/">测试</a><small>1</small></li>
+  
+    <li><a href="/tags/渲染/">渲染</a><small>1</small></li>
+  
+    <li><a href="/tags/爬虫/">爬虫</a><small>1</small></li>
+  
+    <li><a href="/tags/翻译/">翻译</a><small>1</small></li>
+  
+    <li><a href="/tags/自动化文档/">自动化文档</a><small>1</small></li>
+  
+    <li><a href="/tags/触摸/">触摸</a><small>1</small></li>
+  
+    <li><a href="/tags/调试工具/">调试工具</a><small>1</small></li>
+  
+  </ul>
+</div>
+
+</aside>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div class="alignleft">
+  
+  &copy; 2016 Xue He
+  
+</div>
+<div class="clearfix"></div></footer>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+
+<script type="text/javascript">
+var disqus_shortname = 'hexohexue';
+
+(function(){
+  var dsq = document.createElement('script');
+  dsq.type = 'text/javascript';
+  dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+}());
+</script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+</body>
+</html>

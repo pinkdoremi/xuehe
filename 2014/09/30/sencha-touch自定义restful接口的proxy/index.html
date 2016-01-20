@@ -1,0 +1,411 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>sencha-touch自定义restful接口的proxy | Persimmon Kneader</title>
+  <meta name="author" content="Xue He">
+  
+  <meta name="description" content="技术博客">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="sencha-touch自定义restful接口的proxy"/>
+  <meta property="og:site_name" content="Persimmon Kneader"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  <link href="/favicon.png" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="Persimmon Kneader" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  
+<script>
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+	ga('create', 'UA-52998995-1', 'auto');
+	ga('send', 'pageview');
+
+</script>
+
+
+  <script>
+  var _hmt = _hmt || [];
+  (function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?290e001b4a2e8fd868d1eea78cbf6f9f";
+    var s = document.getElementsByTagName("script")[0]; 
+    s.parentNode.insertBefore(hm, s);
+  })();
+  </script>
+</head>
+
+
+<body>
+  <header id="header" class="inner"><div class="alignleft">
+  <h1><a href="/">Persimmon Kneader</a></h1>
+  <h2><a href="/">Front-End Developer</a></h2>
+</div>
+<nav id="main-nav" class="alignright">
+  <ul>
+    
+      <li><a href="//">Home</a></li>
+    
+      <li><a href="//archives">Archives</a></li>
+    
+      <li><a href="//aboutme">About Me</a></li>
+    
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+<div class="clearfix"></div>
+</header>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper"><article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2014-09-30T15:50:06.000Z"><a href="/2014/09/30/sencha-touch自定义restful接口的proxy/">2014-09-30</a></time>
+      
+      
+  
+    <h1 class="title">sencha-touch自定义restful接口的proxy</h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>使用sencha-touch的store时，有时数据来自rest的接口，因为不同服务器rest的不同，我们需要自己来定制属于自己的proxy。<br><a id="more"></a></p>
+<h3 id="1-_u4E3A_u4F55_u6BCF_u6B21load_u5230_u53EA_u6709_u4E00_u4E2A_u6570_u636E"><a href="#1-_u4E3A_u4F55_u6BCF_u6B21load_u5230_u53EA_u6709_u4E00_u4E2A_u6570_u636E" class="headerlink" title="1.为何每次load到只有一个数据"></a>1.为何每次load到只有一个数据</h3><p>rootproperty设置了没有？<br>默认值是：’’<br>如果不设置的话，就默认取到的responseText的root部分，既然是root部分肯定就是一个数据了。<br>所以一定要根据自己项目的具体要求设置一下。例如：<br>responseText：</p>
+<pre><code>{
+  &quot;total_rows&quot;: 54,
+  &quot;offset&quot;: 0,
+  &quot;rows&quot;: [
+    {
+      &quot;key&quot;: &quot;running&quot;,
+      &quot;id&quot;: &quot;0209D576-F1F5-4760-85CC-A72126F13FC8&quot;,
+      &quot;doc&quot;:{
+          &quot;distance&quot;:122,
+          &quot;duration&quot;:12
+      }
+    },
+    {
+      &quot;key&quot;: &quot;running&quot;,
+      &quot;id&quot;: &quot;0A581D9A-95BD-40F3-BA62-6D54069F432F&quot;,
+      &quot;doc&quot;:{
+          &quot;distance&quot;:123,
+          &quot;duration&quot;:12
+      }
+    }
+  ]
+}
+</code></pre><p>这里我需要的rows就是我的rootProperty。<br>我们只需要在proxy中的reader这么设：</p>
+<pre><code>proxy:{
+    reader:{
+        type:&apos;json&apos;,
+        rootProperty:&apos;rows&apos;
+    }
+}
+</code></pre><h3 id="2-__u6570_u636E_u683C_u5F0F_u5947_u8469_u600E_u4E48_u529E"><a href="#2-__u6570_u636E_u683C_u5F0F_u5947_u8469_u600E_u4E48_u529E" class="headerlink" title="2. 数据格式奇葩怎么办"></a>2. 数据格式奇葩怎么办</h3><p>类似我上面的那个数据格式：</p>
+<pre><code>{
+  &quot;key&quot;: &quot;running&quot;,
+  &quot;id&quot;: &quot;0A581D9A-95BD-40F3-BA62-6D54069F432F&quot;,
+  &quot;doc&quot;:{
+      &quot;distance&quot;:123,
+      &quot;duration&quot;:12
+  }
+}
+</code></pre><p>我的model其实对应的是doc下面的内容：</p>
+<pre><code>{
+    &quot;distance&quot;:123,
+    &quot;duration&quot;:12
+}
+</code></pre><p>没关系。重写一下reader就好了。<br>reader有一个方法是：<code>extractData</code><br>这个方法是把读来的每个json数据转化格式交付给别人再处理成model。<br>我修改了一下：</p>
+<pre><code>for (i = 0; i &lt; length; i++) {
+    clientId = null;
+    id = null;
+
+    //修改此处以符合我们的接口：
+    //原句：node = root[i];
+    node = root[i].doc || root[i];
+
+    // When you use a Memory proxy, and you set data: [] to contain record instances
+    // this node will already be a record. In this case we should not try to extract
+    // the record data from the object, but just use the record data attribute.
+    if (node.isModel) {
+        data = node.data;
+    } else {
+        data = me.extractRecordData(node);
+    }
+
+    if (data._clientId !== undefined) {
+        clientId = data._clientId;
+        delete data._clientId;
+    }
+
+    if (data[idProperty] !== undefined) {
+        id = data[idProperty];
+    }
+
+    if (me.getImplicitIncludes()) {
+         me.readAssociated(data, node);
+    }
+
+    records.push({
+        clientId: clientId,
+        id: id,
+        data: data,
+        node: node
+    });
+}
+</code></pre><p>这样就能够正常读取我们的数据，并且读一般的数据的时候也不会有错。</p>
+<h2 id="3-_u5B9A_u5236_u81EA_u5B9A_u4E49_u7684restful_u7684proxy"><a href="#3-_u5B9A_u5236_u81EA_u5B9A_u4E49_u7684restful_u7684proxy" class="headerlink" title="3.定制自定义的restful的proxy"></a>3.定制自定义的restful的proxy</h2><p>理想化的情况下，我们希望创建一个store，使用的proxy是可以匹配我们服务器的restful接口.<br>sencha-touch为我们提供了一个非常方便重写的restproxy，我们可以根据自己的需要定制自己的借口。</p>
+<h3 id="buildUrl"><a href="#buildUrl" class="headerlink" title="buildUrl"></a>buildUrl</h3><p>通过buildUrl方法可以定制我们自己的路径URI。</p>
+<pre><code>buildUrl: function(request, readurl) {
+    var me = this,
+        operation = request.getOperation(),
+        records = operation.getRecords() || [],
+        record = records[0],
+        model = me.getModel(),
+        idProperty = model.getIdProperty(),
+        format = me.getFormat(),
+        url = me.getUrl(request),
+        params = request.getParams() || {},
+        id = (record &amp;&amp; !record.phantom) ? record.getId() : params[idProperty];
+    if (request.getAction( ) === &apos;read&apos;) {
+        if (me.getDesId()) {
+            url += &apos;/_design/&apos; + me.getDesId();
+        }
+        if (me.getView()) {
+            url += &apos;/_view/&apos; + me.getView();
+        }
+    } else {
+        if (me.getAppendId() &amp;&amp; id) {
+            if (!url.match(/\/$/)) {
+                url += &apos;/&apos;;
+            }
+            url += id;
+            delete params[idProperty];
+        }
+    }
+
+    request.setUrl(url);
+
+    return me.callParent([request]);
+}
+</code></pre><p>以上是我初步为我们使用的couchbase定制而重写的buildUrl。<br>这里在sencha本身的rest proxy 的定义之外附加了几个config属性可以作为随时可变化的参数：</p>
+<pre><code>config:{
+    desId: null,
+    view: null
+}
+</code></pre><p>如果是添加过多余的属性的话，就不能使用重写(overide)，要使用继承(extend)。这里没办法只能继承<code>&#39;Ext.data.proxy.Ajax&#39;</code>。</p>
+<h3 id="u5B9A_u5236_u53C2_u6570_u540D_u79F0"><a href="#u5B9A_u5236_u53C2_u6570_u540D_u79F0" class="headerlink" title="定制参数名称"></a>定制参数名称</h3><pre><code>directionParam:&apos;descending&apos;,
+pageParam:false,
+startParam:false,
+actionMethods: {
+    create: &apos;POST&apos;,
+    read: &apos;GET&apos;,
+    update: &apos;PUT&apos;,
+    destroy: &apos;DELETE&apos;
+},
+</code></pre><p>定制自己的restful接口时，有时还需要根据服务器的接口参数的表达方式而改变参数名称。这也是要写在proxy中，其中还有很多的参数可以详见官方API。</p>
+<h2 id="u603B_u7ED3"><a href="#u603B_u7ED3" class="headerlink" title="总结"></a>总结</h2><p>定制自己的proxy可以很方便的使用store的同时对数据进行增删查改并且同步服务器，又和list，dataview绑定。</p>
+
+      
+    </div>
+    <footer>
+      
+        
+  
+  <div class="categories">
+    <a href="/categories/sencha-touch/">sencha touch</a>
+  </div>
+
+        
+  
+  <div class="tags">
+    <a href="/tags/proxy/">proxy</a>, <a href="/tags/restful/">restful</a>, <a href="/tags/sencha-touch/">sencha touch</a>, <a href="/tags/store/">store</a>
+  </div>
+
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+<section id="comment">
+  <h1 class="title">留言</h1>
+
+  
+  <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+  
+</section>
+
+</div></div>
+    <aside id="sidebar" class="alignright">
+  <div class="search">
+  <form action="//google.com/search" method="get" accept-charset="utf-8">
+    <input type="search" name="q" results="0" placeholder="搜索">
+    <input type="hidden" name="q" value="site:yukihe.com">
+  </form>
+</div>
+
+  
+<div class="widget tag">
+  <h3 class="title">分类</h3>
+  <ul class="entry">
+  
+    <li><a href="/categories/ExtJs/">ExtJs</a><small>1</small></li>
+  
+    <li><a href="/categories/css/">css</a><small>5</small></li>
+  
+    <li><a href="/categories/markdown/">markdown</a><small>1</small></li>
+  
+    <li><a href="/categories/redux/">redux</a><small>1</small></li>
+  
+    <li><a href="/categories/sencha-touch/">sencha touch</a><small>3</small></li>
+  
+    <li><a href="/categories/图片压缩/">图片压缩</a><small>1</small></li>
+  
+    <li><a href="/categories/工具/">工具</a><small>3</small></li>
+  
+    <li><a href="/categories/性能优化/">性能优化</a><small>1</small></li>
+  
+    <li><a href="/categories/爬虫/">爬虫</a><small>1</small></li>
+  
+    <li><a href="/categories/自动化文档/">自动化文档</a><small>1</small></li>
+  
+  </ul>
+</div>
+
+
+  
+<div class="widget tag">
+  <h3 class="title">标签</h3>
+  <ul class="entry">
+  
+    <li><a href="/tags/alfred/">alfred</a><small>1</small></li>
+  
+    <li><a href="/tags/browsersync/">browsersync</a><small>1</small></li>
+  
+    <li><a href="/tags/css/">css</a><small>2</small></li>
+  
+    <li><a href="/tags/css3/">css3</a><small>4</small></li>
+  
+    <li><a href="/tags/gradient/">gradient</a><small>1</small></li>
+  
+    <li><a href="/tags/hexo/">hexo</a><small>1</small></li>
+  
+    <li><a href="/tags/markdown/">markdown</a><small>1</small></li>
+  
+    <li><a href="/tags/phantomJS/">phantomJS</a><small>1</small></li>
+  
+    <li><a href="/tags/phantomJs/">phantomJs</a><small>1</small></li>
+  
+    <li><a href="/tags/proxy/">proxy</a><small>1</small></li>
+  
+    <li><a href="/tags/react/">react</a><small>1</small></li>
+  
+    <li><a href="/tags/redux/">redux</a><small>1</small></li>
+  
+    <li><a href="/tags/restful/">restful</a><small>1</small></li>
+  
+    <li><a href="/tags/sencha-touch/">sencha touch</a><small>2</small></li>
+  
+    <li><a href="/tags/sencha-touch/">sencha-touch</a><small>2</small></li>
+  
+    <li><a href="/tags/store/">store</a><small>1</small></li>
+  
+    <li><a href="/tags/sublime/">sublime</a><small>1</small></li>
+  
+    <li><a href="/tags/webp/">webp</a><small>1</small></li>
+  
+    <li><a href="/tags/websql/">websql</a><small>1</small></li>
+  
+    <li><a href="/tags/优化/">优化</a><small>2</small></li>
+  
+    <li><a href="/tags/兼容性/">兼容性</a><small>1</small></li>
+  
+    <li><a href="/tags/动画/">动画</a><small>1</small></li>
+  
+    <li><a href="/tags/图片压缩/">图片压缩</a><small>1</small></li>
+  
+    <li><a href="/tags/委托/">委托</a><small>1</small></li>
+  
+    <li><a href="/tags/导航/">导航</a><small>1</small></li>
+  
+    <li><a href="/tags/性能/">性能</a><small>1</small></li>
+  
+    <li><a href="/tags/性能优化/">性能优化</a><small>1</small></li>
+  
+    <li><a href="/tags/手势/">手势</a><small>1</small></li>
+  
+    <li><a href="/tags/注释/">注释</a><small>1</small></li>
+  
+    <li><a href="/tags/测试/">测试</a><small>1</small></li>
+  
+    <li><a href="/tags/渲染/">渲染</a><small>1</small></li>
+  
+    <li><a href="/tags/爬虫/">爬虫</a><small>1</small></li>
+  
+    <li><a href="/tags/翻译/">翻译</a><small>1</small></li>
+  
+    <li><a href="/tags/自动化文档/">自动化文档</a><small>1</small></li>
+  
+    <li><a href="/tags/触摸/">触摸</a><small>1</small></li>
+  
+    <li><a href="/tags/调试工具/">调试工具</a><small>1</small></li>
+  
+  </ul>
+</div>
+
+</aside>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div class="alignleft">
+  
+  &copy; 2016 Xue He
+  
+</div>
+<div class="clearfix"></div></footer>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+
+<script type="text/javascript">
+var disqus_shortname = 'hexohexue';
+
+(function(){
+  var dsq = document.createElement('script');
+  dsq.type = 'text/javascript';
+  dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+}());
+</script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+</body>
+</html>

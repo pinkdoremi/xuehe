@@ -1,0 +1,345 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>sencha touch中的websql使用方法 | Persimmon Kneader</title>
+  <meta name="author" content="Xue He">
+  
+  <meta name="description" content="技术博客">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="sencha touch中的websql使用方法"/>
+  <meta property="og:site_name" content="Persimmon Kneader"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  <link href="/favicon.png" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="Persimmon Kneader" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  
+<script>
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+	ga('create', 'UA-52998995-1', 'auto');
+	ga('send', 'pageview');
+
+</script>
+
+
+  <script>
+  var _hmt = _hmt || [];
+  (function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?290e001b4a2e8fd868d1eea78cbf6f9f";
+    var s = document.getElementsByTagName("script")[0]; 
+    s.parentNode.insertBefore(hm, s);
+  })();
+  </script>
+</head>
+
+
+<body>
+  <header id="header" class="inner"><div class="alignleft">
+  <h1><a href="/">Persimmon Kneader</a></h1>
+  <h2><a href="/">Front-End Developer</a></h2>
+</div>
+<nav id="main-nav" class="alignright">
+  <ul>
+    
+      <li><a href="//">Home</a></li>
+    
+      <li><a href="//archives">Archives</a></li>
+    
+      <li><a href="//aboutme">About Me</a></li>
+    
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+<div class="clearfix"></div>
+</header>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper"><article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2014-08-16T17:38:26.000Z"><a href="/2014/08/17/sencha-touch中的websql使用方法/">2014-08-17</a></time>
+      
+      
+  
+    <h1 class="title">sencha touch中的websql使用方法</h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>html5中有个websql的技术可以在浏览器中使用数据库，这个技术现在在sencha touch中可以被使用，而且已经封装好了，存在一个proxy了。但是这个方法在官方文档中介绍极少，使用起来难免一头雾水，我也是经过很久的研究才渐渐磕磕碰碰懂得了很多这其中的因果缘由，拿出来和大家分享啊！<br><a id="more"></a></p>
+<h3 id="u521B_u5EFA_u4E00_u4E2A_u4F7F_u7528websql_u5B58_u50A8_u6570_u636E_u7684store_26amp_3Bmodel"><a href="#u521B_u5EFA_u4E00_u4E2A_u4F7F_u7528websql_u5B58_u50A8_u6570_u636E_u7684store_26amp_3Bmodel" class="headerlink" title="创建一个使用websql存储数据的store&amp;model"></a>创建一个使用websql存储数据的store&amp;model</h3><h4 id="store"><a href="#store" class="headerlink" title="store"></a>store</h4><pre><code>Ext.define(&apos;MyApp.store.testStore&apos;,{
+    extend:&apos;Ext.data.Store&apos;,
+    requires: [
+        &apos;Ext.data.proxy.Sql&apos;
+    ],
+    config:{
+        model:&apos;MyApp.model.testModel&apos;,
+        storeId:&apos;testStore&apos;,
+        proxy:{
+            type:&apos;sql&apos;,
+            database:&apos;testDatabase&apos;,
+            table:&apos;testTable&apos;
+        }
+    }
+});
+</code></pre><h4 id="model"><a href="#model" class="headerlink" title="model"></a>model</h4><pre><code>Ext.define(&apos;MyApp.model.testModel&apos;,{
+    extend:&apos;Ext.data.Model&apos;,
+    requires:[
+        &apos;Ext.data.Field&apos;
+    ],
+    config:{
+        fields:[
+            &apos;id&apos;,
+            {
+                name:&apos;title&apos;,
+                type:&apos;string&apos;
+            }
+        ],
+        identifier:{type:&apos;uuid&apos;},
+    }
+});
+</code></pre><h4 id="u5177_u4F53_u7684_u8BF4_u660E_uFF1A"><a href="#u5177_u4F53_u7684_u8BF4_u660E_uFF1A" class="headerlink" title="具体的说明："></a>具体的说明：</h4><ol>
+<li>Store: <code>proxy</code>中的<code>type</code>定为<code>sql</code>，同时，<code>requires</code>里面要添加<code>Ext.data.proxy.Sql</code>。</li>
+<li>Store: <code>proxy</code>中的<code>database</code>为你需要创建的数据库名称。<code>table</code>为你需要创建的对应这个store的表的名称。</li>
+<li>Store: <code>reader</code>在普通的<code>load</code>操作中不需要使用到。不过当你需要<code>Store.addData(data)</code>为store添加数据的时候，需要用到<code>reader</code>来将你参数<code>data</code>转换成<code>model</code>再自动通过<code>Store.add(model)</code>的方法来添加进<code>store</code>。这种情况就根据你的需求自己更改<code>reader</code>啦。<h5 id="u5982_u679C_u4F60_u51FA_u73B0_u4E86id_u65E0_u6CD5_u5B58_u50A8_u7684_u60C5_u51B5_uFF1A"><a href="#u5982_u679C_u4F60_u51FA_u73B0_u4E86id_u65E0_u6CD5_u5B58_u50A8_u7684_u60C5_u51B5_uFF1A" class="headerlink" title="如果你出现了id无法存储的情况："></a>如果你出现了id无法存储的情况：</h5></li>
+<li>Model: model要注意的如果你存储的数据需要有id字段，那你必须要设置<code>identifier</code>,不能设置别的必须设置<code>uuid</code>。因为只有<code>uuid</code>有一个方法<code>isUnique</code>，而sqlproxy在<code>updateModel</code>中是这么写的：</li>
+</ol>
+<blockquote>
+<pre><code>updateModel: function(model) {
+    if (model) {
+        var modelName = model.modelName,
+            defaultDateFormat = this.getDefaultDateFormat(),
+            table = modelName.slice(modelName.lastIndexOf(&apos;.&apos;) + 1);
+
+        model.getFields().each(function (field) {
+            if (field.getType().type === &apos;date&apos; &amp;&amp; !field.getDateFormat()) {
+                field.setDateFormat(defaultDateFormat);
+            }
+        });
+
+        this.setUniqueIdStrategy(model.getIdentifier().isUnique);
+        if (!this.getTable()) {
+            this.setTable(table);
+        }
+        this.setColumns(this.getPersistedModelColumns(model));
+    }
+
+    this.callParent(arguments);
+},
+</code></pre></blockquote>
+<p>在这里又有一个很关键的属性:<code>proxy.uniqueIdStrategy</code>这是一个私有的属性，我们在给类定义的时候如果为该值直接赋值是无效的，会在这个函数中修改掉之前定义的值。<br>而uniqueIdStrategy和这里的columns会直接影响到之后把数据存储到websql中时，<strong>id这个字段会不会被存储</strong>。<br>所以在这里唯一没有违和感的解决办法就是在model中设置：<code>identifier:{type:&#39;uuid&#39;}</code></p>
+<p>PS：这个问题研究了很久，网上都没有解决办法。所有的国内国外的数据都没有涉及，国内的压根没写到websql，国外的也只有几本略微带过websql，详细写过几行代码的，只有使用model直接操作websql，没有使用到store来存储数据。</p>
+<h3 id="u5E38_u89C1_u95EE_u9898_u89E3_u7B54_uFF1A"><a href="#u5E38_u89C1_u95EE_u9898_u89E3_u7B54_uFF1A" class="headerlink" title="常见问题解答："></a>常见问题解答：</h3><h4 id="1-__u6570_u636E_u6CA1_u6709_u88AB_u6DFB_u52A0_uFF08log_sync_u7684_u65F6_u5019add_u7684_u5185_u5BB9_u4E3A0/_u6CA1_u6709_u76EE_u6807record_uFF09"><a href="#1-__u6570_u636E_u6CA1_u6709_u88AB_u6DFB_u52A0_uFF08log_sync_u7684_u65F6_u5019add_u7684_u5185_u5BB9_u4E3A0/_u6CA1_u6709_u76EE_u6807record_uFF09" class="headerlink" title="1. 数据没有被添加（log sync的时候add的内容为0/没有目标record）"></a>1. 数据没有被添加（log sync的时候add的内容为0/没有目标record）</h4><p>当你的record已经添加进store了（store.data中已经存在这个数据）但是同步时没有被同步进去，说明你的record被系统判断并不是新添加的记录。这很有可能发生，不对，是经常容易发生，只要你不是Ext.create出来的新record，它的phantom值都是false。（基本上都是这样的，我也没有一个一个去试过什么方法不是false，因为我发现这个问题以后就强迫在同步前为新数据<code>phantom = true</code>）<strong>phantom</strong>：代表这个record是否是数据库中不存在的，是则为false，已经存在了则为true。如果我们要新添加一个record，最好手动为他赋值<code>record.phantom = true</code>。</p>
+<h4 id="2-__u5B58_u5165_u7684id_u503C_u6709_u95EE_u9898"><a href="#2-__u5B58_u5165_u7684id_u503C_u6709_u95EE_u9898" class="headerlink" title="2. 存入的id值有问题"></a>2. 存入的id值有问题</h4><p>这个问题我自己也没有办法解决。比如一个id为1，存进去的数据就是1.0，而且取出来是string格式的，很奇怪。但是按照源代码手动去数据库<code>INSERT</code>操作，存进去的就是纯数字。。。</p>
+<h4 id="3-__u65E0_u6CD5_u5B58_u5165id"><a href="#3-__u65E0_u6CD5_u5B58_u5165id" class="headerlink" title="3. 无法存入id"></a>3. 无法存入id</h4><p>请见具体说明的第四点。（在上面⬆）</p>
+<h4 id="4-__u6570_u636E_u5B58_u4E0D_u8FDB_u53BB_u4E86_uFF1F"><a href="#4-__u6570_u636E_u5B58_u4E0D_u8FDB_u53BB_u4E86_uFF1F" class="headerlink" title="4. 数据存不进去了？"></a>4. 数据存不进去了？</h4><p>数据存不进去的时候，很有可能是因为是有的int类型的字段，你没有为他赋值。比如说有个年龄，压根就没写进去。本来想想不存也可以啊，这个字段本身不是说必须要有啊。但是senchatouch在操作websql中，执行的语句是这样的：<br><code>transaction.executeSql(a,b)</code><br>其中a是sql语句，但是a中的描述value部分是这样的(?,?,?,?,?,?)而b这个数组会按照顺序替换前面的问号，b就是存储的真正的value的值。如果你的年龄没有写，年龄就没有被替换，就是？,但是？不是数字格式的，在存入时就会失败。<br>有时候可能也不是你的int没写导致存不进去，别的没写，但是你的b因为少了数据错位了，别的int存到了？，就错了，所以最好还是每个值都要赋。</p>
+<h4 id="5-__u5E0C_u671B_u4E00_u4E0B_u5B50_u8BFB_u53D6_u6240_u6709_u7684_u6570_u636E"><a href="#5-__u5E0C_u671B_u4E00_u4E0B_u5B50_u8BFB_u53D6_u6240_u6709_u7684_u6570_u636E" class="headerlink" title="5. 希望一下子读取所有的数据"></a>5. 希望一下子读取所有的数据</h4><p>这是很正常的想法，本地的数据库不需要像请求远程的数据库那样怕消耗太多流量而限制一次load的数据。<br>sencha本身一次load的数据是25条一页，一次load一页。<br>只需要在load操作之前设置下：<br><code>store.currentPage = undefined;</code>就可以了。<br>因为在数据库读取操作中：<br><code>SELECT * FROM .........</code><br>如果不设置这个currentPage = undefined，sencha就会为你添加<code>LIMIT</code>在这个语句后面，这会导致限制一次读取的数据。</p>
+<h3 id="u603B_u7ED3"><a href="#u603B_u7ED3" class="headerlink" title="总结"></a>总结</h3><p>sencha touch 自带的websql的proxy总的来说还是比较完善的，但是这部分的官方说明很少。详细的内容可能需要经常查阅源代码来了解。<br>很多问题可以通过慢慢地debug来了解这其中的机制和顺利地解决。<br>PS：能debug的地方就没有难题！模拟器这种不能debug的地方才是地狱！！！！！！！！！！！！！</p>
+
+      
+    </div>
+    <footer>
+      
+        
+  
+  <div class="categories">
+    <a href="/categories/sencha-touch/">sencha touch</a>
+  </div>
+
+        
+  
+  <div class="tags">
+    <a href="/tags/sencha-touch/">sencha-touch</a>, <a href="/tags/websql/">websql</a>
+  </div>
+
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+<section id="comment">
+  <h1 class="title">留言</h1>
+
+  
+  <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+  
+</section>
+
+</div></div>
+    <aside id="sidebar" class="alignright">
+  <div class="search">
+  <form action="//google.com/search" method="get" accept-charset="utf-8">
+    <input type="search" name="q" results="0" placeholder="搜索">
+    <input type="hidden" name="q" value="site:yukihe.com">
+  </form>
+</div>
+
+  
+<div class="widget tag">
+  <h3 class="title">分类</h3>
+  <ul class="entry">
+  
+    <li><a href="/categories/ExtJs/">ExtJs</a><small>1</small></li>
+  
+    <li><a href="/categories/css/">css</a><small>5</small></li>
+  
+    <li><a href="/categories/markdown/">markdown</a><small>1</small></li>
+  
+    <li><a href="/categories/redux/">redux</a><small>1</small></li>
+  
+    <li><a href="/categories/sencha-touch/">sencha touch</a><small>3</small></li>
+  
+    <li><a href="/categories/图片压缩/">图片压缩</a><small>1</small></li>
+  
+    <li><a href="/categories/工具/">工具</a><small>3</small></li>
+  
+    <li><a href="/categories/性能优化/">性能优化</a><small>1</small></li>
+  
+    <li><a href="/categories/爬虫/">爬虫</a><small>1</small></li>
+  
+    <li><a href="/categories/自动化文档/">自动化文档</a><small>1</small></li>
+  
+  </ul>
+</div>
+
+
+  
+<div class="widget tag">
+  <h3 class="title">标签</h3>
+  <ul class="entry">
+  
+    <li><a href="/tags/alfred/">alfred</a><small>1</small></li>
+  
+    <li><a href="/tags/browsersync/">browsersync</a><small>1</small></li>
+  
+    <li><a href="/tags/css/">css</a><small>2</small></li>
+  
+    <li><a href="/tags/css3/">css3</a><small>4</small></li>
+  
+    <li><a href="/tags/gradient/">gradient</a><small>1</small></li>
+  
+    <li><a href="/tags/hexo/">hexo</a><small>1</small></li>
+  
+    <li><a href="/tags/markdown/">markdown</a><small>1</small></li>
+  
+    <li><a href="/tags/phantomJS/">phantomJS</a><small>1</small></li>
+  
+    <li><a href="/tags/phantomJs/">phantomJs</a><small>1</small></li>
+  
+    <li><a href="/tags/proxy/">proxy</a><small>1</small></li>
+  
+    <li><a href="/tags/react/">react</a><small>1</small></li>
+  
+    <li><a href="/tags/redux/">redux</a><small>1</small></li>
+  
+    <li><a href="/tags/restful/">restful</a><small>1</small></li>
+  
+    <li><a href="/tags/sencha-touch/">sencha touch</a><small>2</small></li>
+  
+    <li><a href="/tags/sencha-touch/">sencha-touch</a><small>2</small></li>
+  
+    <li><a href="/tags/store/">store</a><small>1</small></li>
+  
+    <li><a href="/tags/sublime/">sublime</a><small>1</small></li>
+  
+    <li><a href="/tags/webp/">webp</a><small>1</small></li>
+  
+    <li><a href="/tags/websql/">websql</a><small>1</small></li>
+  
+    <li><a href="/tags/优化/">优化</a><small>2</small></li>
+  
+    <li><a href="/tags/兼容性/">兼容性</a><small>1</small></li>
+  
+    <li><a href="/tags/动画/">动画</a><small>1</small></li>
+  
+    <li><a href="/tags/图片压缩/">图片压缩</a><small>1</small></li>
+  
+    <li><a href="/tags/委托/">委托</a><small>1</small></li>
+  
+    <li><a href="/tags/导航/">导航</a><small>1</small></li>
+  
+    <li><a href="/tags/性能/">性能</a><small>1</small></li>
+  
+    <li><a href="/tags/性能优化/">性能优化</a><small>1</small></li>
+  
+    <li><a href="/tags/手势/">手势</a><small>1</small></li>
+  
+    <li><a href="/tags/注释/">注释</a><small>1</small></li>
+  
+    <li><a href="/tags/测试/">测试</a><small>1</small></li>
+  
+    <li><a href="/tags/渲染/">渲染</a><small>1</small></li>
+  
+    <li><a href="/tags/爬虫/">爬虫</a><small>1</small></li>
+  
+    <li><a href="/tags/翻译/">翻译</a><small>1</small></li>
+  
+    <li><a href="/tags/自动化文档/">自动化文档</a><small>1</small></li>
+  
+    <li><a href="/tags/触摸/">触摸</a><small>1</small></li>
+  
+    <li><a href="/tags/调试工具/">调试工具</a><small>1</small></li>
+  
+  </ul>
+</div>
+
+</aside>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div class="alignleft">
+  
+  &copy; 2016 Xue He
+  
+</div>
+<div class="clearfix"></div></footer>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+
+<script type="text/javascript">
+var disqus_shortname = 'hexohexue';
+
+(function(){
+  var dsq = document.createElement('script');
+  dsq.type = 'text/javascript';
+  dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+}());
+</script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+</body>
+</html>
