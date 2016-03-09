@@ -1,0 +1,354 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>深入了解React生命周期 | Persimmon Kneader</title>
+  <meta name="author" content="Xue He">
+  
+  <meta name="description" content="技术博客">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="深入了解React生命周期"/>
+  <meta property="og:site_name" content="Persimmon Kneader"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  <link href="/favicon.png" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="Persimmon Kneader" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  
+<script>
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+	ga('create', 'UA-52998995-1', 'auto');
+	ga('send', 'pageview');
+
+</script>
+
+
+  <script>
+  var _hmt = _hmt || [];
+  (function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?290e001b4a2e8fd868d1eea78cbf6f9f";
+    var s = document.getElementsByTagName("script")[0]; 
+    s.parentNode.insertBefore(hm, s);
+  })();
+  </script>
+</head>
+
+
+<body>
+  <header id="header" class="inner"><div class="alignleft">
+  <h1><a href="/">Persimmon Kneader</a></h1>
+  <h2><a href="/">Front-End Developer</a></h2>
+</div>
+<nav id="main-nav" class="alignright">
+  <ul>
+    
+      <li><a href="//">Home</a></li>
+    
+      <li><a href="//archives">Archives</a></li>
+    
+      <li><a href="//aboutme">About Me</a></li>
+    
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+<div class="clearfix"></div>
+</header>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper"><article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2016-03-09T14:00:54.000Z"><a href="/2016/03/09/2016-03-09/">2016-03-09</a></time>
+      
+      
+  
+    <h1 class="title">深入了解React生命周期</h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <h2 id="u4EC0_u4E48_u662F_u751F_u547D_u5468_u671F_3A"><a href="#u4EC0_u4E48_u662F_u751F_u547D_u5468_u671F_3A" class="headerlink" title="什么是生命周期:"></a>什么是生命周期:</h2><p>react的生命周期就是react组件从创建,到更新,最后到销毁这段时间.</p>
+<p>react在这段时间的不同阶段提供了不同的接口,在经历不同的生命周期中的节点时,会调用这些方法.</p>
+<p>通过在不同的时间阶段写入特殊的方法,能够让我们能够很好地控制组件的状态,让组件按照开发者的心意去安排任意的状态,从而渲染出开发者希望的样子,并且可以做任何想做的事情.</p>
+<h2 id="u4E00_u4E2A_u590D_u5408_u7EC4_u4EF6_u7684_u751F_u547D_u5468_u671F_3A"><a href="#u4E00_u4E2A_u590D_u5408_u7EC4_u4EF6_u7684_u751F_u547D_u5468_u671F_3A" class="headerlink" title="一个复合组件的生命周期:"></a>一个复合组件的生命周期:</h2><ol>
+<li>constructor : 此时初始化<code>state</code>,并且创建实例.</li>
+<li>componentWillMount : 组件即将被挂载到页面上.</li>
+<li>render : 在此方法中,仅根据组件的<code>state</code>以及<code>props</code>进行渲染.</li>
+<li>下面进入子组件的生命周期:<ol>
+<li>子组件的:constructor</li>
+<li>子组件的:componentWillMount</li>
+<li>子组件的:render</li>
+<li>子组件的:componentDidMount</li>
+<li>子组件更新阶段生命周期:<ol>
+<li>componentWillReceiveProps: 只要父组件更新,此方法就会被调用</li>
+<li>shouldComponentUpdate: return true/false,来决定是否更新此组件</li>
+<li>componentWillUpdate: 组件更新之前最后一环.</li>
+<li>render</li>
+<li>孙子组件进行更新或创建…</li>
+<li>componentDidUpdate: 组件更新完毕后调用</li>
+</ol>
+</li>
+<li>componentWillUnmount:子组件将被移除时调用,用于解除事件绑定等操作.</li>
+<li>孙子组件的componentWillUnmount</li>
+<li>孙子组件销毁<br>…</li>
+</ol>
+</li>
+<li>此组件销毁,实例为空,被react释放,等待垃圾回收;</li>
+</ol>
+<p>此处有demo:<br><a href="http://jsbin.com/serebas/22/edit?html,js,console,output" target="_blank" rel="external">view jsbin</a><br><a id="more"></a></p>
+<p>下面针对其中几步关键步骤,作详细的说明:</p>
+<h3 id="componentWillReceiveProps_28nextProps_2C_nextContext_29"><a href="#componentWillReceiveProps_28nextProps_2C_nextContext_29" class="headerlink" title="componentWillReceiveProps(nextProps, nextContext)"></a><code>componentWillReceiveProps(nextProps, nextContext)</code></h3><p>这个方法只要父组件更新,这个方法就会被调用!!要注意!<br>就算子组件的props值都没有变,这个方法还是会被调用的,因为父组件会更新.</p>
+<h3 id="shouldComponentUpdate_28nextProps_2C_nextState_2C_nextContext_29"><a href="#shouldComponentUpdate_28nextProps_2C_nextState_2C_nextContext_29" class="headerlink" title="shouldComponentUpdate(nextProps, nextState, nextContext)"></a><code>shouldComponentUpdate(nextProps, nextState, nextContext)</code></h3><p>此方法很有说头,在父组件更新的情况下,会被调用.<br>但是如果是被<code>forceUpdate</code>了,是不会被调用的(都<code>forceUpdate</code>强制更新了,才不会考虑还应不应该更新了呢~)</p>
+<p>如果此方法没有写,都会被认为是应该更新的,相当于默认了个返回true的函数.</p>
+<p>如果这步函数中没有返回false,则会继续进行组件的更新并且依次调用接下来的生命周期函数.<br>如果这步函数返回了true,否则后续的<code>componentWillUpdate</code>,<code>render</code>,<code>componentDidUpdate</code>都不会被调用,组件不会更新.</p>
+<p>这里非常需要注意,就算不写<code>shouldComponentUpdate</code>这个方法,子组件的更新还是会被调用:<br><strong>DEMO:<a href="http://jsbin.com/serebas/23/edit?html,js,console,output" target="_blank" rel="external">jsbin</a></strong><br>所以说 <strong>只要父组件一更新,它的子组件都会全部更新,不管这次和子组件有没有关系</strong> ,但是有些组件并没有改变props和state的值,所以没有重新渲染的必要.通过这个函数限制返回true的情况,可以有效地提高性能,减少不必要的更新开销.</p>
+<p>然后问题来了,如果<code>state</code>/<code>props</code>中的属性是个对象,并且如果这个对象很深很大有很多层级,那么判断这个新状态是否需要更新就非常麻烦,需要 <strong>深度对比</strong> .<br>想来性能会非常差,更不用说用<code>shouldComponentUpdate</code>的初衷是用来提升性能了…<br>此时使用<a href="https://facebook.github.io/immutable-js/" target="_blank" rel="external">immutable-js</a>,可以 <strong>直接对比两个引用对象</strong> 来作为<code>shouldComponentUpdate</code>的依据.<br>因为使用immutable的对象的情况下, <strong>如果两个引用对象的引用值不同,则代表两个对象内部一定是不同的</strong> .</p>
+<pre><code>shouldComponentUpdate: function (newProps, newState) {
+  // 如果这个组件只有props会影响渲染值的话..
+  return newProps.data !== this.props.data;
+}
+</code></pre><p>对此来说更详细的解释在这里<a href="http://www.sitepoint.com/immutability-react/" target="_blank" rel="external">http://www.sitepoint.com/immutability-react/</a></p>
+<h3 id="componentWillUpdate_28nextProps_2C_nextState_2C_nextContext_29"><a href="#componentWillUpdate_28nextProps_2C_nextState_2C_nextContext_29" class="headerlink" title="componentWillUpdate(nextProps, nextState, nextContext)"></a><code>componentWillUpdate(nextProps, nextState, nextContext)</code></h3><p>在这一步依然可以操作props和state,甚至更改新状态的引用对象属性上的值.<br>在react源码中是这么操作的:</p>
+<pre><code>_performComponentUpdate: function(...) {
+   //先把老的状态保存起来
+   ....
+
+   //调用一下componentWillUpdate
+   componentWillUpdate(...);
+
+   //把新的状态赋到实例上
+   ....
+
+   //进行更新&amp;渲染
+   this._updateRenderedComponent(transaction, unmaskedContext);
+
+   //调用componentDidUpdate
+   componentDidUpdate.bind(新this,...)//参数是上面保存的老的状态值
+ },
+</code></pre><h3 id="componentDidUpdate_28prevProps_2C_prevState_2C_prevContext_29"><a href="#componentDidUpdate_28prevProps_2C_prevState_2C_prevContext_29" class="headerlink" title="componentDidUpdate(prevProps, prevState, prevContext)"></a><code>componentDidUpdate(prevProps, prevState, prevContext)</code></h3><p>如上代码所示,这一步在 <strong>更新渲染之后</strong> 才会进行.此时<code>this</code>上的值 <strong>已经是最新的状态</strong> ,并且组件已经渲染好了,并且可以使用已经渲染好的<code>dom</code>了</p>
+<h3 id="setState_28partialState_2Ccallback_29"><a href="#setState_28partialState_2Ccallback_29" class="headerlink" title="setState(partialState,callback)"></a><code>setState(partialState,callback)</code></h3><p>如果react要更新就不得不说说这个方法.<br>这个方法是绑在<code>ReactComponent</code>的原型上的方法,它的参数介绍如下:</p>
+<p><code>partialState</code>:它的第一个参数可以是状态中的一部分,最终会和老的<code>state</code>合并成新的<code>state</code>.所以每次更新,只需要写更新的一部分属性就可以了.</p>
+<p><code>callback</code>:第二个参数会在所有<code>setState</code>所做的更新 <strong>都更新完毕</strong> 之后才会 <strong>调用这个<code>callback</code>回调</strong> .</p>
+<h4 id="u66F4_u65B0_u961F_u5217"><a href="#u66F4_u65B0_u961F_u5217" class="headerlink" title="更新队列"></a>更新队列</h4><p>而这个方法所产生的<code>state</code>变化会被塞进一个等待被更新的队列中,react会 <strong>按先后顺序处理</strong> 所有的状态变化.<br>并且所有变化的<code>callback</code>回调(<code>setState</code>方法传入的第二个参数),也会被塞进一个 <strong>回调队列</strong> ,待所有变化都处理结束后,会按顺序触发这些<code>callback</code>.</p>
+<h2 id="u64CD_u4F5C_u8BEF_u533A"><a href="#u64CD_u4F5C_u8BEF_u533A" class="headerlink" title="操作误区"></a>操作误区</h2><p>所以问题来了.有时候代码写着写着发现,发现组件进入无限渲染了.往往是在生命周期上使用的方法有误:</p>
+<p>例如:</p>
+<blockquote>
+<p>儿子组件在接受到新<code>props</code>的时候(在<code>componentWillReceiveProps</code>中)发送了一个ajax请求,拿到请求回调后,需要把数据通过回调函数给老爸组件,老爸组件拿到数据后,更新了本身的<code>state</code>,导致自身更新从而所有的孩子们都更新了一轮.而儿子此时又接受到了新的<code>state</code>,如果儿子没有避免重复请求,儿子又会发ajax请求,拿到请求回调后又会告诉老爸,老爸再让儿子更新,儿子再告诉老爸,老爸再让儿子更新…!@#$%^&amp;*..</p>
+</blockquote>
+<p>此时发生问题的原因:<br>父组件更新,子组件必然会调用<code>componentWillReceiveProps</code>,如果此时又改变父组件的状态,又会引起父组件的更新,从而子组件又更新.</p>
+<p>此时的解决方法可以是,儿子判断一下是否状态相同从而不去重复请求.</p>
+<h2 id="u540E_u8BED"><a href="#u540E_u8BED" class="headerlink" title="后语"></a>后语</h2><p>介绍生命周期的文章很多,特别是官网的说明已经非常详细:<br><a href="https://facebook.github.io/react/docs/component-specs.html" target="_blank" rel="external">https://facebook.github.io/react/docs/component-specs.html</a></p>
+<p>在写了很多react代码后,深深感觉曾经看过并且以为理解了生命周期,缺在实际运用的过程频繁掉坑.如今回过头仔细再看生命周期的时候发现了很多之前理解有误的地方.经过源码的阅读重点,在这里整理了自己认为官方文档没有说到的部分.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+  
+  <div class="categories">
+    <a href="/categories/react/">react</a>
+  </div>
+
+        
+  
+  <div class="tags">
+    <a href="/tags/react/">react</a>
+  </div>
+
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+<section id="comment">
+  <h1 class="title">留言</h1>
+
+  
+  <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+  
+</section>
+
+</div></div>
+    <aside id="sidebar" class="alignright">
+  <div class="search">
+  <form action="//google.com/search" method="get" accept-charset="utf-8">
+    <input type="search" name="q" results="0" placeholder="搜索">
+    <input type="hidden" name="q" value="site:yukihe.com">
+  </form>
+</div>
+
+  
+<div class="widget tag">
+  <h3 class="title">分类</h3>
+  <ul class="entry">
+  
+    <li><a href="/categories/ExtJs/">ExtJs</a><small>1</small></li>
+  
+    <li><a href="/categories/css/">css</a><small>5</small></li>
+  
+    <li><a href="/categories/markdown/">markdown</a><small>1</small></li>
+  
+    <li><a href="/categories/react/">react</a><small>1</small></li>
+  
+    <li><a href="/categories/redux/">redux</a><small>1</small></li>
+  
+    <li><a href="/categories/sencha-touch/">sencha touch</a><small>3</small></li>
+  
+    <li><a href="/categories/吐槽/">吐槽</a><small>1</small></li>
+  
+    <li><a href="/categories/图片压缩/">图片压缩</a><small>1</small></li>
+  
+    <li><a href="/categories/工具/">工具</a><small>3</small></li>
+  
+    <li><a href="/categories/性能优化/">性能优化</a><small>1</small></li>
+  
+    <li><a href="/categories/爬虫/">爬虫</a><small>1</small></li>
+  
+    <li><a href="/categories/自动化文档/">自动化文档</a><small>1</small></li>
+  
+  </ul>
+</div>
+
+
+  
+<div class="widget tag">
+  <h3 class="title">标签</h3>
+  <ul class="entry">
+  
+    <li><a href="/tags/alfred/">alfred</a><small>1</small></li>
+  
+    <li><a href="/tags/browsersync/">browsersync</a><small>1</small></li>
+  
+    <li><a href="/tags/css/">css</a><small>2</small></li>
+  
+    <li><a href="/tags/css3/">css3</a><small>4</small></li>
+  
+    <li><a href="/tags/gradient/">gradient</a><small>1</small></li>
+  
+    <li><a href="/tags/hexo/">hexo</a><small>1</small></li>
+  
+    <li><a href="/tags/markdown/">markdown</a><small>1</small></li>
+  
+    <li><a href="/tags/phantomJS/">phantomJS</a><small>1</small></li>
+  
+    <li><a href="/tags/phantomJs/">phantomJs</a><small>1</small></li>
+  
+    <li><a href="/tags/proxy/">proxy</a><small>1</small></li>
+  
+    <li><a href="/tags/react/">react</a><small>2</small></li>
+  
+    <li><a href="/tags/redux/">redux</a><small>1</small></li>
+  
+    <li><a href="/tags/restful/">restful</a><small>1</small></li>
+  
+    <li><a href="/tags/sencha-touch/">sencha touch</a><small>2</small></li>
+  
+    <li><a href="/tags/sencha-touch/">sencha-touch</a><small>2</small></li>
+  
+    <li><a href="/tags/store/">store</a><small>1</small></li>
+  
+    <li><a href="/tags/sublime/">sublime</a><small>1</small></li>
+  
+    <li><a href="/tags/webp/">webp</a><small>1</small></li>
+  
+    <li><a href="/tags/websql/">websql</a><small>1</small></li>
+  
+    <li><a href="/tags/优化/">优化</a><small>2</small></li>
+  
+    <li><a href="/tags/兼容性/">兼容性</a><small>1</small></li>
+  
+    <li><a href="/tags/动画/">动画</a><small>1</small></li>
+  
+    <li><a href="/tags/吐槽/">吐槽</a><small>1</small></li>
+  
+    <li><a href="/tags/图片压缩/">图片压缩</a><small>1</small></li>
+  
+    <li><a href="/tags/委托/">委托</a><small>1</small></li>
+  
+    <li><a href="/tags/导航/">导航</a><small>1</small></li>
+  
+    <li><a href="/tags/性能/">性能</a><small>1</small></li>
+  
+    <li><a href="/tags/性能优化/">性能优化</a><small>1</small></li>
+  
+    <li><a href="/tags/手势/">手势</a><small>1</small></li>
+  
+    <li><a href="/tags/注释/">注释</a><small>1</small></li>
+  
+    <li><a href="/tags/测试/">测试</a><small>1</small></li>
+  
+    <li><a href="/tags/渲染/">渲染</a><small>1</small></li>
+  
+    <li><a href="/tags/爬虫/">爬虫</a><small>1</small></li>
+  
+    <li><a href="/tags/翻译/">翻译</a><small>1</small></li>
+  
+    <li><a href="/tags/自动化文档/">自动化文档</a><small>1</small></li>
+  
+    <li><a href="/tags/触摸/">触摸</a><small>1</small></li>
+  
+    <li><a href="/tags/调试工具/">调试工具</a><small>1</small></li>
+  
+  </ul>
+</div>
+
+</aside>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div class="alignleft">
+  
+  &copy; 2016 Xue He
+  
+</div>
+<div class="clearfix"></div></footer>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+
+<script type="text/javascript">
+var disqus_shortname = 'hexohexue';
+
+(function(){
+  var dsq = document.createElement('script');
+  dsq.type = 'text/javascript';
+  dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+}());
+</script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+</body>
+</html>

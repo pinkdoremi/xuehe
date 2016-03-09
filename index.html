@@ -74,6 +74,70 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2016-03-09T14:00:54.000Z"><a href="/2016/03/09/2016-03-09/">2016-03-09</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2016/03/09/2016-03-09/">深入了解React生命周期</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <h2 id="u4EC0_u4E48_u662F_u751F_u547D_u5468_u671F_3A"><a href="#u4EC0_u4E48_u662F_u751F_u547D_u5468_u671F_3A" class="headerlink" title="什么是生命周期:"></a>什么是生命周期:</h2><p>react的生命周期就是react组件从创建,到更新,最后到销毁这段时间.</p>
+<p>react在这段时间的不同阶段提供了不同的接口,在经历不同的生命周期中的节点时,会调用这些方法.</p>
+<p>通过在不同的时间阶段写入特殊的方法,能够让我们能够很好地控制组件的状态,让组件按照开发者的心意去安排任意的状态,从而渲染出开发者希望的样子,并且可以做任何想做的事情.</p>
+<h2 id="u4E00_u4E2A_u590D_u5408_u7EC4_u4EF6_u7684_u751F_u547D_u5468_u671F_3A"><a href="#u4E00_u4E2A_u590D_u5408_u7EC4_u4EF6_u7684_u751F_u547D_u5468_u671F_3A" class="headerlink" title="一个复合组件的生命周期:"></a>一个复合组件的生命周期:</h2><ol>
+<li>constructor : 此时初始化<code>state</code>,并且创建实例.</li>
+<li>componentWillMount : 组件即将被挂载到页面上.</li>
+<li>render : 在此方法中,仅根据组件的<code>state</code>以及<code>props</code>进行渲染.</li>
+<li>下面进入子组件的生命周期:<ol>
+<li>子组件的:constructor</li>
+<li>子组件的:componentWillMount</li>
+<li>子组件的:render</li>
+<li>子组件的:componentDidMount</li>
+<li>子组件更新阶段生命周期:<ol>
+<li>componentWillReceiveProps: 只要父组件更新,此方法就会被调用</li>
+<li>shouldComponentUpdate: return true/false,来决定是否更新此组件</li>
+<li>componentWillUpdate: 组件更新之前最后一环.</li>
+<li>render</li>
+<li>孙子组件进行更新或创建…</li>
+<li>componentDidUpdate: 组件更新完毕后调用</li>
+</ol>
+</li>
+<li>componentWillUnmount:子组件将被移除时调用,用于解除事件绑定等操作.</li>
+<li>孙子组件的componentWillUnmount</li>
+<li>孙子组件销毁<br>…</li>
+</ol>
+</li>
+<li>此组件销毁,实例为空,被react释放,等待垃圾回收;</li>
+</ol>
+<p>此处有demo:<br><a href="http://jsbin.com/serebas/22/edit?html,js,console,output">view jsbin</a><br>
+      
+    </div>
+    <footer>
+      
+        
+          <div class="alignleft">
+            <a href="/2016/03/09/2016-03-09/#more" class="more-link">Read More</a>
+          </div>
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2016-02-28T16:05:09.000Z"><a href="/2016/02/29/2016-02-29/">2016-02-29</a></time>
       
       
@@ -450,42 +514,6 @@ page.open(&apos;http://github.com/&apos;, function() {
 
 
 
-  <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2015-04-25T12:31:45.000Z"><a href="/2015/04/25/clip-path/">2015-04-25</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2015/04/25/clip-path/">clip-path</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>趁着这两天比较闲研究了一下这个月风靡一时的属性clip-path。<br>起先关注到这个属性是看到了一个非常酷的<a href="http://species-in-pieces.com/#">网站</a><br>后来在微博上先后看到了很多人对它的解析，使用的是css3的clip-path属性。<br>
-      
-    </div>
-    <footer>
-      
-        
-          <div class="alignleft">
-            <a href="/2015/04/25/clip-path/#more" class="more-link">Read More</a>
-          </div>
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
 
 <nav id="pagination">
   
@@ -512,6 +540,8 @@ page.open(&apos;http://github.com/&apos;, function() {
     <li><a href="/categories/css/">css</a><small>5</small></li>
   
     <li><a href="/categories/markdown/">markdown</a><small>1</small></li>
+  
+    <li><a href="/categories/react/">react</a><small>1</small></li>
   
     <li><a href="/categories/redux/">redux</a><small>1</small></li>
   
@@ -558,7 +588,7 @@ page.open(&apos;http://github.com/&apos;, function() {
   
     <li><a href="/tags/proxy/">proxy</a><small>1</small></li>
   
-    <li><a href="/tags/react/">react</a><small>1</small></li>
+    <li><a href="/tags/react/">react</a><small>2</small></li>
   
     <li><a href="/tags/redux/">redux</a><small>1</small></li>
   
